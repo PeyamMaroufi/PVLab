@@ -329,7 +329,7 @@
             this.MaximumSize = new System.Drawing.Size(1058, 742);
             this.MinimumSize = new System.Drawing.Size(1058, 742);
             this.Name = "PVLab";
-            this.Text = "Form1";
+            this.Text = "PVLab";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
