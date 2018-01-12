@@ -37,22 +37,22 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
-            this.radioButton5 = new System.Windows.Forms.RadioButton();
-            this.radioButton6 = new System.Windows.Forms.RadioButton();
-            this.button1 = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
-            this.comboBox6 = new System.Windows.Forms.ComboBox();
-            this.comboBox7 = new System.Windows.Forms.ComboBox();
-            this.comboBox8 = new System.Windows.Forms.ComboBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.rbNone = new System.Windows.Forms.RadioButton();
+            this.rbRepeat = new System.Windows.Forms.RadioButton();
+            this.rbRapid = new System.Windows.Forms.RadioButton();
+            this.rbETS = new System.Windows.Forms.RadioButton();
+            this.rbSingle = new System.Windows.Forms.RadioButton();
+            this.rbAuto = new System.Windows.Forms.RadioButton();
+            this.btnStart = new System.Windows.Forms.Button();
+            this.cbSamplingsInt = new System.Windows.Forms.ComboBox();
+            this.cbTimebase = new System.Windows.Forms.ComboBox();
+            this.cbSamplingRate = new System.Windows.Forms.ComboBox();
+            this.cbChannels = new System.Windows.Forms.ComboBox();
+            this.cbStreaming = new System.Windows.Forms.ComboBox();
+            this.cbVoltage = new System.Windows.Forms.ComboBox();
+            this.cbCoupling = new System.Windows.Forms.ComboBox();
+            this.cbRes = new System.Windows.Forms.ComboBox();
+            this.txtStatus = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -62,21 +62,21 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.comboBox8);
-            this.panel1.Controls.Add(this.comboBox7);
-            this.panel1.Controls.Add(this.comboBox6);
-            this.panel1.Controls.Add(this.comboBox5);
-            this.panel1.Controls.Add(this.comboBox4);
-            this.panel1.Controls.Add(this.comboBox3);
-            this.panel1.Controls.Add(this.comboBox2);
-            this.panel1.Controls.Add(this.comboBox1);
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.radioButton4);
-            this.panel1.Controls.Add(this.radioButton5);
-            this.panel1.Controls.Add(this.radioButton6);
-            this.panel1.Controls.Add(this.radioButton3);
-            this.panel1.Controls.Add(this.radioButton2);
-            this.panel1.Controls.Add(this.radioButton1);
+            this.panel1.Controls.Add(this.cbRes);
+            this.panel1.Controls.Add(this.cbCoupling);
+            this.panel1.Controls.Add(this.cbVoltage);
+            this.panel1.Controls.Add(this.cbStreaming);
+            this.panel1.Controls.Add(this.cbChannels);
+            this.panel1.Controls.Add(this.cbSamplingRate);
+            this.panel1.Controls.Add(this.cbTimebase);
+            this.panel1.Controls.Add(this.cbSamplingsInt);
+            this.panel1.Controls.Add(this.btnStart);
+            this.panel1.Controls.Add(this.rbETS);
+            this.panel1.Controls.Add(this.rbSingle);
+            this.panel1.Controls.Add(this.rbAuto);
+            this.panel1.Controls.Add(this.rbRapid);
+            this.panel1.Controls.Add(this.rbRepeat);
+            this.panel1.Controls.Add(this.rbNone);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label6);
@@ -87,7 +87,7 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(12, 13);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1018, 126);
+            this.panel1.Size = new System.Drawing.Size(1018, 113);
             this.panel1.TabIndex = 0;
             // 
             // label1
@@ -162,157 +162,157 @@
             this.label8.TabIndex = 8;
             this.label8.Text = "Coupling:";
             // 
-            // radioButton1
+            // rbNone
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(233, 19);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(51, 17);
-            this.radioButton1.TabIndex = 10;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "None";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.rbNone.AutoSize = true;
+            this.rbNone.Location = new System.Drawing.Point(247, 29);
+            this.rbNone.Name = "rbNone";
+            this.rbNone.Size = new System.Drawing.Size(51, 17);
+            this.rbNone.TabIndex = 10;
+            this.rbNone.TabStop = true;
+            this.rbNone.Text = "None";
+            this.rbNone.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // rbRepeat
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(233, 55);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(60, 17);
-            this.radioButton2.TabIndex = 11;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Repeat";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.rbRepeat.AutoSize = true;
+            this.rbRepeat.Location = new System.Drawing.Point(247, 52);
+            this.rbRepeat.Name = "rbRepeat";
+            this.rbRepeat.Size = new System.Drawing.Size(60, 17);
+            this.rbRepeat.TabIndex = 11;
+            this.rbRepeat.TabStop = true;
+            this.rbRepeat.Text = "Repeat";
+            this.rbRepeat.UseVisualStyleBackColor = true;
             // 
-            // radioButton3
+            // rbRapid
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(233, 89);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(53, 17);
-            this.radioButton3.TabIndex = 12;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "Rapid";
-            this.radioButton3.UseVisualStyleBackColor = true;
+            this.rbRapid.AutoSize = true;
+            this.rbRapid.Location = new System.Drawing.Point(247, 75);
+            this.rbRapid.Name = "rbRapid";
+            this.rbRapid.Size = new System.Drawing.Size(53, 17);
+            this.rbRapid.TabIndex = 12;
+            this.rbRapid.TabStop = true;
+            this.rbRapid.Text = "Rapid";
+            this.rbRapid.UseVisualStyleBackColor = true;
             // 
-            // radioButton4
+            // rbETS
             // 
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(341, 89);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(46, 17);
-            this.radioButton4.TabIndex = 15;
-            this.radioButton4.TabStop = true;
-            this.radioButton4.Text = "ETS";
-            this.radioButton4.UseVisualStyleBackColor = true;
+            this.rbETS.AutoSize = true;
+            this.rbETS.Location = new System.Drawing.Point(325, 75);
+            this.rbETS.Name = "rbETS";
+            this.rbETS.Size = new System.Drawing.Size(46, 17);
+            this.rbETS.TabIndex = 15;
+            this.rbETS.TabStop = true;
+            this.rbETS.Text = "ETS";
+            this.rbETS.UseVisualStyleBackColor = true;
             // 
-            // radioButton5
+            // rbSingle
             // 
-            this.radioButton5.AutoSize = true;
-            this.radioButton5.Location = new System.Drawing.Point(341, 55);
-            this.radioButton5.Name = "radioButton5";
-            this.radioButton5.Size = new System.Drawing.Size(54, 17);
-            this.radioButton5.TabIndex = 14;
-            this.radioButton5.TabStop = true;
-            this.radioButton5.Text = "Single";
-            this.radioButton5.UseVisualStyleBackColor = true;
+            this.rbSingle.AutoSize = true;
+            this.rbSingle.Location = new System.Drawing.Point(324, 52);
+            this.rbSingle.Name = "rbSingle";
+            this.rbSingle.Size = new System.Drawing.Size(54, 17);
+            this.rbSingle.TabIndex = 14;
+            this.rbSingle.TabStop = true;
+            this.rbSingle.Text = "Single";
+            this.rbSingle.UseVisualStyleBackColor = true;
             // 
-            // radioButton6
+            // rbAuto
             // 
-            this.radioButton6.AutoSize = true;
-            this.radioButton6.Location = new System.Drawing.Point(341, 19);
-            this.radioButton6.Name = "radioButton6";
-            this.radioButton6.Size = new System.Drawing.Size(47, 17);
-            this.radioButton6.TabIndex = 13;
-            this.radioButton6.TabStop = true;
-            this.radioButton6.Text = "Auto";
-            this.radioButton6.UseVisualStyleBackColor = true;
+            this.rbAuto.AutoSize = true;
+            this.rbAuto.Location = new System.Drawing.Point(324, 29);
+            this.rbAuto.Name = "rbAuto";
+            this.rbAuto.Size = new System.Drawing.Size(47, 17);
+            this.rbAuto.TabIndex = 13;
+            this.rbAuto.TabStop = true;
+            this.rbAuto.Text = "Auto";
+            this.rbAuto.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnStart
             // 
-            this.button1.Location = new System.Drawing.Point(412, 68);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "Start";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnStart.Location = new System.Drawing.Point(401, 49);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(75, 23);
+            this.btnStart.TabIndex = 16;
+            this.btnStart.Text = "Start";
+            this.btnStart.UseVisualStyleBackColor = true;
             // 
-            // comboBox1
+            // cbSamplingsInt
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(87, 30);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 17;
+            this.cbSamplingsInt.FormattingEnabled = true;
+            this.cbSamplingsInt.Location = new System.Drawing.Point(87, 30);
+            this.cbSamplingsInt.Name = "cbSamplingsInt";
+            this.cbSamplingsInt.Size = new System.Drawing.Size(121, 21);
+            this.cbSamplingsInt.TabIndex = 17;
             // 
-            // comboBox2
+            // cbTimebase
             // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(87, 68);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(121, 21);
-            this.comboBox2.TabIndex = 18;
+            this.cbTimebase.FormattingEnabled = true;
+            this.cbTimebase.Location = new System.Drawing.Point(87, 68);
+            this.cbTimebase.Name = "cbTimebase";
+            this.cbTimebase.Size = new System.Drawing.Size(121, 21);
+            this.cbTimebase.TabIndex = 18;
             // 
-            // comboBox3
+            // cbSamplingRate
             // 
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(580, 30);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(95, 21);
-            this.comboBox3.TabIndex = 19;
+            this.cbSamplingRate.FormattingEnabled = true;
+            this.cbSamplingRate.Location = new System.Drawing.Point(580, 30);
+            this.cbSamplingRate.Name = "cbSamplingRate";
+            this.cbSamplingRate.Size = new System.Drawing.Size(95, 21);
+            this.cbSamplingRate.TabIndex = 19;
             // 
-            // comboBox4
+            // cbChannels
             // 
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Location = new System.Drawing.Point(580, 70);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(95, 21);
-            this.comboBox4.TabIndex = 20;
+            this.cbChannels.FormattingEnabled = true;
+            this.cbChannels.Location = new System.Drawing.Point(580, 70);
+            this.cbChannels.Name = "cbChannels";
+            this.cbChannels.Size = new System.Drawing.Size(95, 21);
+            this.cbChannels.TabIndex = 20;
             // 
-            // comboBox5
+            // cbStreaming
             // 
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(744, 30);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(95, 21);
-            this.comboBox5.TabIndex = 21;
+            this.cbStreaming.FormattingEnabled = true;
+            this.cbStreaming.Location = new System.Drawing.Point(744, 30);
+            this.cbStreaming.Name = "cbStreaming";
+            this.cbStreaming.Size = new System.Drawing.Size(95, 21);
+            this.cbStreaming.TabIndex = 21;
             // 
-            // comboBox6
+            // cbVoltage
             // 
-            this.comboBox6.FormattingEnabled = true;
-            this.comboBox6.Location = new System.Drawing.Point(744, 70);
-            this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(95, 21);
-            this.comboBox6.TabIndex = 22;
+            this.cbVoltage.FormattingEnabled = true;
+            this.cbVoltage.Location = new System.Drawing.Point(744, 70);
+            this.cbVoltage.Name = "cbVoltage";
+            this.cbVoltage.Size = new System.Drawing.Size(95, 21);
+            this.cbVoltage.TabIndex = 22;
             // 
-            // comboBox7
+            // cbCoupling
             // 
-            this.comboBox7.FormattingEnabled = true;
-            this.comboBox7.Location = new System.Drawing.Point(908, 30);
-            this.comboBox7.Name = "comboBox7";
-            this.comboBox7.Size = new System.Drawing.Size(95, 21);
-            this.comboBox7.TabIndex = 23;
+            this.cbCoupling.FormattingEnabled = true;
+            this.cbCoupling.Location = new System.Drawing.Point(908, 30);
+            this.cbCoupling.Name = "cbCoupling";
+            this.cbCoupling.Size = new System.Drawing.Size(95, 21);
+            this.cbCoupling.TabIndex = 23;
             // 
-            // comboBox8
+            // cbRes
             // 
-            this.comboBox8.FormattingEnabled = true;
-            this.comboBox8.Location = new System.Drawing.Point(908, 73);
-            this.comboBox8.Name = "comboBox8";
-            this.comboBox8.Size = new System.Drawing.Size(95, 21);
-            this.comboBox8.TabIndex = 24;
+            this.cbRes.FormattingEnabled = true;
+            this.cbRes.Location = new System.Drawing.Point(908, 73);
+            this.cbRes.Name = "cbRes";
+            this.cbRes.Size = new System.Drawing.Size(95, 21);
+            this.cbRes.TabIndex = 24;
             // 
-            // textBox1
+            // txtStatus
             // 
-            this.textBox1.Location = new System.Drawing.Point(850, 176);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(180, 515);
-            this.textBox1.TabIndex = 1;
+            this.txtStatus.Location = new System.Drawing.Point(850, 145);
+            this.txtStatus.Multiline = true;
+            this.txtStatus.Name = "txtStatus";
+            this.txtStatus.Size = new System.Drawing.Size(180, 546);
+            this.txtStatus.TabIndex = 1;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(847, 160);
+            this.label9.Location = new System.Drawing.Point(847, 129);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(40, 13);
             this.label9.TabIndex = 2;
@@ -324,7 +324,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 703);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtStatus);
             this.Controls.Add(this.panel1);
             this.MaximumSize = new System.Drawing.Size(1058, 742);
             this.MinimumSize = new System.Drawing.Size(1058, 742);
@@ -348,22 +348,22 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.RadioButton radioButton4;
-        private System.Windows.Forms.RadioButton radioButton5;
-        private System.Windows.Forms.RadioButton radioButton6;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.ComboBox comboBox8;
-        private System.Windows.Forms.ComboBox comboBox7;
-        private System.Windows.Forms.ComboBox comboBox6;
-        private System.Windows.Forms.ComboBox comboBox5;
-        private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.RadioButton rbETS;
+        private System.Windows.Forms.RadioButton rbSingle;
+        private System.Windows.Forms.RadioButton rbAuto;
+        private System.Windows.Forms.RadioButton rbRapid;
+        private System.Windows.Forms.RadioButton rbRepeat;
+        private System.Windows.Forms.RadioButton rbNone;
+        private System.Windows.Forms.Button btnStart;
+        private System.Windows.Forms.ComboBox cbTimebase;
+        private System.Windows.Forms.ComboBox cbSamplingsInt;
+        private System.Windows.Forms.ComboBox cbRes;
+        private System.Windows.Forms.ComboBox cbCoupling;
+        private System.Windows.Forms.ComboBox cbVoltage;
+        private System.Windows.Forms.ComboBox cbStreaming;
+        private System.Windows.Forms.ComboBox cbChannels;
+        private System.Windows.Forms.ComboBox cbSamplingRate;
+        private System.Windows.Forms.TextBox txtStatus;
         private System.Windows.Forms.Label label9;
     }
 }
