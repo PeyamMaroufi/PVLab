@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace PVLab
 {
-    public partial class Form1 : Form
+    public partial class PVLab : Form
     {
-        public Form1()
+        public PVLab()
         {
             InitializeComponent();
         }
