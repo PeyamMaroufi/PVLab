@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.txtSamplingInterval = new System.Windows.Forms.TextBox();
             this.cbRes = new System.Windows.Forms.ComboBox();
             this.cbCoupling = new System.Windows.Forms.ComboBox();
             this.cbVoltage = new System.Windows.Forms.ComboBox();
@@ -53,7 +55,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.txtSamplingInterval = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,6 +63,7 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.txtSamplingInterval);
             this.panel1.Controls.Add(this.cbRes);
             this.panel1.Controls.Add(this.cbCoupling);
@@ -89,6 +91,22 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1018, 113);
             this.panel1.TabIndex = 0;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(401, 68);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 26;
+            this.button1.Text = "Stop";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // txtSamplingInterval
+            // 
+            this.txtSamplingInterval.Location = new System.Drawing.Point(88, 29);
+            this.txtSamplingInterval.Name = "txtSamplingInterval";
+            this.txtSamplingInterval.Size = new System.Drawing.Size(120, 20);
+            this.txtSamplingInterval.TabIndex = 25;
             // 
             // cbRes
             // 
@@ -121,6 +139,7 @@
             this.cbStreaming.Name = "cbStreaming";
             this.cbStreaming.Size = new System.Drawing.Size(95, 21);
             this.cbStreaming.TabIndex = 21;
+            this.cbStreaming.SelectedIndexChanged += new System.EventHandler(this.cbStreaming_SelectedIndexChanged);
             // 
             // cbChannels
             // 
@@ -148,7 +167,7 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(401, 49);
+            this.btnStart.Location = new System.Drawing.Point(401, 26);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(75, 23);
             this.btnStart.TabIndex = 16;
@@ -311,13 +330,6 @@
             this.label9.TabIndex = 2;
             this.label9.Text = "Status:";
             // 
-            // txtSamplingInterval
-            // 
-            this.txtSamplingInterval.Location = new System.Drawing.Point(88, 29);
-            this.txtSamplingInterval.Name = "txtSamplingInterval";
-            this.txtSamplingInterval.Size = new System.Drawing.Size(120, 20);
-            this.txtSamplingInterval.TabIndex = 25;
-            // 
             // PVLab
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -365,6 +377,7 @@
         private System.Windows.Forms.TextBox txtStatus;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtSamplingInterval;
+        private System.Windows.Forms.Button button1;
     }
 }
 

@@ -27,11 +27,18 @@ namespace PS5000AImports
         #endregion
 
         #region Driver enums
-
+        /// <summary>
+        /// Streamin type
+        /// </summary>
+        public enum streaminType : uint
+        {
+            CollectStreamingImmediate,
+            CollectStreamingTriggered,
+        }
+        
         /// <summary>
         /// Channels name.
         /// </summary>
-
         public enum Channel : uint
         {
             ChannelA,

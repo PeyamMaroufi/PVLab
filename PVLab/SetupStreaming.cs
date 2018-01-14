@@ -87,8 +87,13 @@ namespace PVLab
         // Set sampling counts
         public uint _sampleNumber { get; set; } = 60000;
 
-        // set voltage range
+        // Set voltage range
         public Imports.Range _voltageRange { get; set; } = Imports.Range.Range_5V;
+
+        // Set up streaming type
+        public uint typeOfStreamin { get; set; }
+
+        // Set up 
 
         #endregion
 
@@ -487,6 +492,7 @@ namespace PVLab
                 s = "Device opened succefully";
                 _handle = handle;
                 powerSupplyConnected = true;
+                Run();
             }
         }
 

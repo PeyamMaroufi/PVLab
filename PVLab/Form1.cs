@@ -13,6 +13,7 @@ namespace PVLab
 {
     public partial class PVLab : Form
     {
+        SetupStreaming streaming;
         string s;
         public PVLab()
         {
@@ -49,7 +50,7 @@ namespace PVLab
             }
 
             // Set up time combo box
-            foreach (var time in Enum.GetValues(typeof(Imports.Channel)))
+            foreach (var time in Enum.GetValues(typeof(Imports.ReportedTimeUnits)))
             {
                 cbTimebase.Items.Add(time);
             }
@@ -60,14 +61,26 @@ namespace PVLab
                 cbCoupling.Items.Add(coupling);
             }
 
-        }
+            // Set  up coupling combo box
+            foreach (var stream in Enum.GetValues(typeof(Imports.streaminType)))
+            {
+                cbStreaming.Items.Add(stream);
+            }
 
+        }
         #endregion
 
+        #region UI events
+        /// <summary>
+        /// Button click which sets the initial contraints and variables in SetupStreamin class. UpdateText() will update the 
+        /// status textbox. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnStart_Click(object sender, EventArgs e)
         {
             // Making a new instance of SetupStreaming which runs the drivers and methods
-            SetupStreaming streaming = new SetupStreaming()
+            streaming = new SetupStreaming()
             {
                 _resolution = (Imports.DeviceResolution)cbRes.SelectedIndex,
                 _coupling = (Imports.Coupling)cbCoupling.SelectedIndex,
@@ -76,21 +89,56 @@ namespace PVLab
                 _sampleIntervall = uint.Parse(txtSamplingInterval.Text),
             };
 
-            // Litsens to the choices of user
-            uint streaminIndex = (uint)cbStreaming.SelectedIndex;
-            switch (streaminIndex)
+            streaming.First();
+            // Updating status textbox
+            UpdateText();
+
+        }
+
+        /// <summary>
+        /// This method will determine type of streaming and looks for if the streaming class is not null. if it is null it will popup
+        /// a messagebox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbStreaming_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            uint streamingIndex = (uint)cbStreaming.SelectedIndex;
+            if (streaming != null)
             {
-                case 0:
-                    streaming.CollectStreamingImmediate();
-                    break;
-                case 1:
-                    streaming.CollectStreamingTriggered();
-                    break;             
+
+
+                switch (streamingIndex)
+                {
+                    case 0:
+                        streaming.CollectStreamingImmediate();
+                        break;
+                    case 1:
+                        streaming.CollectStreamingTriggered();
+                        break;
+                }
+
             }
+            //else
+            //{
+            //    MessageBox.Show("Something went wrong");
+            //}
 
             // Updating status textbox
+            //UpdateText();
+        }
+        #endregion
+
+
+        #region Help Method
+        /// <summary>
+        ///  Update the status text. s is both defined in SetupStreaming and this class.
+        /// </summary>
+        void UpdateText()
+        {
             s = streaming.s;
             txtStatus.Text += s + Environment.NewLine;
         }
+        #endregion
     }
 }
