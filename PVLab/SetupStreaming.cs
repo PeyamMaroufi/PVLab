@@ -18,7 +18,7 @@ namespace PVLab
         public bool enabled;
     }
 
-    class SetupStreaming 
+    class SetupStreaming
     {
         #region Public and private members
 
@@ -179,18 +179,18 @@ namespace PVLab
             // Use Pinned Arrays for the application buffers
             PinnedArray<short>[] appBuffersPinned = new PinnedArray<short>[_channelCount * 2];
 
-            for (int ch = 0; ch < _channelCount * 2; ch += 2) // create data buffers
-            {
-                buffers[ch] = new short[sampleCount];
-                buffers[ch + 1] = new short[sampleCount];
+           // for (int ch = 0; ch < _channelCount * 2; ch += 1) // create data buffers
+            //{
+                buffers[0] = new short[sampleCount];
+                buffers[ 1] = new short[sampleCount];
 
-                appBuffers[ch] = new short[sampleCount];
-                appBuffers[ch + 1] = new short[sampleCount];
+                appBuffers[0] = new short[sampleCount];
+                appBuffers[ 1] = new short[sampleCount];
 
-                appBuffersPinned[ch] = new PinnedArray<short>(appBuffers[ch]);
-                appBuffersPinned[ch + 1] = new PinnedArray<short>(appBuffers[ch + 1]);
+                appBuffersPinned[0] = new PinnedArray<short>(appBuffers[ch]);
+                appBuffersPinned[1] = new PinnedArray<short>(appBuffers[ch + 1]);
 
-                status = Imports.SetDataBuffers(_handle, (Imports.Channel)(ch / 2), buffers[ch], buffers[ch + 1], sampleCount, 0, Imports.RatioMode.None);
+                status = Imports.SetDataBuffers(_handle, (Imports.Channel)(0), buffers[0], buffers[1], sampleCount, 0, Imports.RatioMode.None);
             }
 
 
@@ -451,13 +451,13 @@ namespace PVLab
         **************************************************************************************/
         public void Run()
         {
-     
+            // Display the device info
+            GetDeviceInfo();
 
             // resulotion
             DisplaySettings();
 
-            // Display the device info
-            GetDeviceInfo();
+
 
             Imports.MaximumValue(_handle, out _maxValue); // Set max. ADC Counts
 
@@ -476,7 +476,7 @@ namespace PVLab
         /// </summary>
         /// <returns></returns>
         [STAThread]
-         public  void First()
+        public void First()
         {
             short handle;
             bool powerSupplyConnected = true;

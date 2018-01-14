@@ -55,6 +55,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -330,11 +331,20 @@
             this.label9.TabIndex = 2;
             this.label9.Text = "Status:";
             // 
+            // cartesianChart1
+            // 
+            this.cartesianChart1.Location = new System.Drawing.Point(12, 145);
+            this.cartesianChart1.Name = "cartesianChart1";
+            this.cartesianChart1.Size = new System.Drawing.Size(832, 546);
+            this.cartesianChart1.TabIndex = 3;
+            this.cartesianChart1.Text = "cartesianChart1";
+            // 
             // PVLab
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 703);
+            this.Controls.Add(this.cartesianChart1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.txtStatus);
             this.Controls.Add(this.panel1);
@@ -378,6 +388,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtSamplingInterval;
         private System.Windows.Forms.Button button1;
+        private LiveCharts.WinForms.CartesianChart cartesianChart1;
     }
 }
 
