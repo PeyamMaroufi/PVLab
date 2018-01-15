@@ -91,7 +91,7 @@ namespace PVLab
         public Imports.Range _voltageRange { get; set; } = Imports.Range.Range_5V;
 
         // Set up streaming type
-        public uint typeOfStreamin { get; set; }
+        public uint _typeOfStreaming { get; set; }
 
         // Set up 
 
@@ -179,19 +179,19 @@ namespace PVLab
             // Use Pinned Arrays for the application buffers
             PinnedArray<short>[] appBuffersPinned = new PinnedArray<short>[_channelCount * 2];
 
-           // for (int ch = 0; ch < _channelCount * 2; ch += 1) // create data buffers
+            // for (int ch = 0; ch < _channelCount * 2; ch += 1) // create data buffers
             //{
-                buffers[0] = new short[sampleCount];
-                buffers[ 1] = new short[sampleCount];
+            buffers[0] = new short[sampleCount];
+            buffers[1] = new short[sampleCount];
 
-                appBuffers[0] = new short[sampleCount];
-                appBuffers[ 1] = new short[sampleCount];
+            appBuffers[0] = new short[sampleCount];
+            appBuffers[1] = new short[sampleCount];
 
-                appBuffersPinned[0] = new PinnedArray<short>(appBuffers[ch]);
-                appBuffersPinned[1] = new PinnedArray<short>(appBuffers[ch + 1]);
+            appBuffersPinned[0] = new PinnedArray<short>(appBuffers[0]);
+            appBuffersPinned[1] = new PinnedArray<short>(appBuffers[1]);
 
-                status = Imports.SetDataBuffers(_handle, (Imports.Channel)(0), buffers[0], buffers[1], sampleCount, 0, Imports.RatioMode.None);
-            }
+            status = Imports.SetDataBuffers(_handle, (Imports.Channel)(0), buffers[0], buffers[1], sampleCount, 0, Imports.RatioMode.None);
+            s = "StreamHandler is running. ";
 
 
             _autoStop = false;
@@ -229,11 +229,11 @@ namespace PVLab
 
         }
 
-        private string ViewInformation(int? totalSamples, uint? triggeredAt, uint? sampleInterval)
+        private void ViewInformation(int? totalSamples, uint? triggeredAt, uint? sampleInterval)
         {
 
-            var s = String.Format("Total sample : {0} \n Triggered at {1} \n Sampling intervall \n", totalSamples, triggeredAt, sampleInterval);
-            return s;
+            s = String.Format("Total sample : {0} \n Triggered at {1} \n Sampling intervall \n", totalSamples, triggeredAt, sampleInterval);
+
         }
 
 
@@ -369,7 +369,7 @@ namespace PVLab
         public void CollectStreamingImmediate()
         {
 
-            Imports.SetSimpleTrigger(_handle, 0, Imports.Channel.ChannelA, 0, Imports.ThresholdDirection.None, 0, 0);
+            Imports.SetSimpleTrigger(_handle, 0, ChannelSelected, 0, Imports.ThresholdDirection.None, 0, 0);
 
             StreamDataHandler(0);
         }
@@ -389,60 +389,6 @@ namespace PVLab
             StreamDataHandler(100000); // Collect 100000 pre-trigger samples
         }
 
-        /****************************************************************************
-        * Select resolution of device
-        ****************************************************************************/
-        //void SetResolution()
-        //{
-        //    bool ivalid;
-        //    int maxSelection = 2;
-        //    uint istatus;
-
-        //    if (_noEnabledChannels <= 2)
-        //    {
-        //        Console.WriteLine("3 : 15 bits"); //can only use up to 2 channels with 15 bit mode     
-        //        if (_noEnabledChannels < 2)
-        //        {
-        //            Console.WriteLine("4 : 16 bits"); //can only use 1 channel with 16 bit mode
-        //            maxSelection = 4;
-        //        }
-        //        else
-        //        {
-        //            maxSelection = 3;
-        //        }
-        //    }
-
-        //    //Console.WriteLine();
-
-        //    do
-        //    {
-        //        try
-        //        {
-        //            //Console.WriteLine("Resolution: ");
-        //            _resolution = (Imports.DeviceResolution)(uint.Parse(Console.ReadLine()));
-        //            ivalid = true;
-        //        }
-        //        catch (FormatException e)
-        //        {
-        //            ivalid = false;
-        //            //Console.WriteLine("Error: " + e.Message);
-        //        }
-
-        //        if (_resolution > (Imports.DeviceResolution)maxSelection)
-        //        {
-        //            //Console.WriteLine("Please select a number stated above");
-        //            ivalid = false;
-        //        }
-
-        //    } while (!ivalid);
-
-        //    if ((istatus = Imports.SetDeviceResolution(_handle, _resolution)) != 0)
-        //    {
-        //        //Console.WriteLine("Resolution not set Error code: {0)", istatus);
-        //    }
-
-        //}
-
 
         /*************************************************************************************
         * Run
@@ -451,12 +397,12 @@ namespace PVLab
         **************************************************************************************/
         public void Run()
         {
+            s = "Run function is running";
             // Display the device info
             GetDeviceInfo();
 
             // resulotion
             DisplaySettings();
-
 
 
             Imports.MaximumValue(_handle, out _maxValue); // Set max. ADC Counts
@@ -475,14 +421,56 @@ namespace PVLab
         /// Start sampling
         /// </summary>
         /// <returns></returns>
-        [STAThread]
+        
         public void First()
         {
-            short handle;
-            bool powerSupplyConnected = true;
-            uint status = Imports.OpenUnit(out handle, null, Imports.DeviceResolution.PS5000A_DR_8BIT);
 
-            if (status != StatusCodes.PICO_OK && handle != 0)
+            short count = 0;
+            short serialsLength = 40;
+            StringBuilder serials = new StringBuilder(serialsLength);
+
+            uint status = Imports.EnumerateUnits(out count, serials, ref serialsLength);
+
+            if (status != StatusCodes.PICO_OK)
+            {
+                Environment.Exit(0);
+            }
+            else
+            {
+                if (count == 1)
+                {
+                    s = "Found device: " + count;
+                }
+                else
+                {
+                    s = "Found device: " + count;
+                }
+
+                s = "Found device: " + serials;
+
+            }
+
+            short handle;
+            status = Imports.OpenUnit(out handle, null, _resolution);
+            bool powerSupplyConnected = true;
+            s = "Open unit runs ";
+
+            if (status == StatusCodes.PICO_POWER_SUPPLY_NOT_CONNECTED)
+            {
+                status = Imports.ChangePowerSource(handle, status);
+                powerSupplyConnected = false;
+            }
+            else if (status != StatusCodes.PICO_OK)
+            {
+                s = "Cannot open device error code: " + status.ToString();
+                System.Environment.Exit(-1);
+            }
+            else
+            {
+                // Do nothing - power supply connected
+            }
+
+            if (status != StatusCodes.PICO_OK)
             {
                 status = Imports.ChangePowerSource(handle, status);
                 powerSupplyConnected = false;
@@ -506,6 +494,18 @@ namespace PVLab
             uint status;
             status = Imports.RunStreaming(_handle, ref sampleInterval, reportedTimeUnits, 0, samplenumber, 1, 1, Imports.RatioMode.None, (uint)bufferSize);
             StreamDataHandler(0);
+
+
+            if(_typeOfStreaming == 0)
+            {
+                s = "immediate streaming is on";
+                CollectStreamingImmediate();
+            }
+            else if(_typeOfStreaming == 1){
+                s = "Triggering  streaming is on";
+                CollectStreamingTriggered();
+            }
+
         }
 
         /// <summary>

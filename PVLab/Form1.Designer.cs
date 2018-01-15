@@ -56,6 +56,7 @@
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
+            this.btnOpen = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,6 +65,7 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.btnOpen);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.txtSamplingInterval);
             this.panel1.Controls.Add(this.cbRes);
@@ -95,7 +97,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(401, 68);
+            this.button1.Location = new System.Drawing.Point(401, 73);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 26;
@@ -140,7 +142,6 @@
             this.cbStreaming.Name = "cbStreaming";
             this.cbStreaming.Size = new System.Drawing.Size(95, 21);
             this.cbStreaming.TabIndex = 21;
-            this.cbStreaming.SelectedIndexChanged += new System.EventHandler(this.cbStreaming_SelectedIndexChanged);
             // 
             // cbChannels
             // 
@@ -168,13 +169,12 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(401, 26);
+            this.btnStart.Location = new System.Drawing.Point(401, 44);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(75, 23);
             this.btnStart.TabIndex = 16;
             this.btnStart.Text = "Start";
             this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // rbETS
             // 
@@ -339,6 +339,16 @@
             this.cartesianChart1.TabIndex = 3;
             this.cartesianChart1.Text = "cartesianChart1";
             // 
+            // btnOpen
+            // 
+            this.btnOpen.Location = new System.Drawing.Point(401, 15);
+            this.btnOpen.Name = "btnOpen";
+            this.btnOpen.Size = new System.Drawing.Size(75, 23);
+            this.btnOpen.TabIndex = 27;
+            this.btnOpen.Text = "Open Unit";
+            this.btnOpen.UseVisualStyleBackColor = true;
+            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            // 
             // PVLab
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -389,6 +399,7 @@
         private System.Windows.Forms.TextBox txtSamplingInterval;
         private System.Windows.Forms.Button button1;
         private LiveCharts.WinForms.CartesianChart cartesianChart1;
+        private System.Windows.Forms.Button btnOpen;
     }
 }
 
