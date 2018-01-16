@@ -1525,6 +1525,7 @@ namespace PS5000AImports
                                                         SigGenTrigType triggerType,
                                                         SigGenTrigSource triggerSource,
                                                         short extInThreshold);
+
         /// <summary>
         /// handle, the handle of the required device
         /// offsetVoltage,

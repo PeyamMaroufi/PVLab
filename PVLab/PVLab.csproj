@@ -68,13 +68,21 @@
     <Compile Include="PicoConnectProbes.cs" />
     <Compile Include="PicoPinnedArray.cs" />
     <Compile Include="PicoStatus.cs" />
+    <Compile Include="plot.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="plot.Designer.cs">
+      <DependentUpon>plot.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PS5000AImports.cs" />
     <Compile Include="PS5000APinnedArray.cs" />
-    <Compile Include="SetupStreaming.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="plot.resx">
+      <DependentUpon>plot.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

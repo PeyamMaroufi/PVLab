@@ -29,20 +29,19 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.txtSampleCount = new System.Windows.Forms.TextBox();
+            this.btnOpen = new System.Windows.Forms.Button();
+            this.btnStreaming = new System.Windows.Forms.Button();
             this.txtSamplingInterval = new System.Windows.Forms.TextBox();
             this.cbRes = new System.Windows.Forms.ComboBox();
             this.cbCoupling = new System.Windows.Forms.ComboBox();
             this.cbVoltage = new System.Windows.Forms.ComboBox();
             this.cbStreaming = new System.Windows.Forms.ComboBox();
             this.cbChannels = new System.Windows.Forms.ComboBox();
-            this.cbSamplingRate = new System.Windows.Forms.ComboBox();
-            this.cbTimebase = new System.Windows.Forms.ComboBox();
             this.btnStart = new System.Windows.Forms.Button();
             this.rbETS = new System.Windows.Forms.RadioButton();
             this.rbSingle = new System.Windows.Forms.RadioButton();
             this.rbAuto = new System.Windows.Forms.RadioButton();
-            this.rbRapid = new System.Windows.Forms.RadioButton();
             this.rbRepeat = new System.Windows.Forms.RadioButton();
             this.rbNone = new System.Windows.Forms.RadioButton();
             this.label8 = new System.Windows.Forms.Label();
@@ -51,12 +50,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
-            this.btnOpen = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,21 +61,19 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.txtSampleCount);
             this.panel1.Controls.Add(this.btnOpen);
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.btnStreaming);
             this.panel1.Controls.Add(this.txtSamplingInterval);
             this.panel1.Controls.Add(this.cbRes);
             this.panel1.Controls.Add(this.cbCoupling);
             this.panel1.Controls.Add(this.cbVoltage);
             this.panel1.Controls.Add(this.cbStreaming);
             this.panel1.Controls.Add(this.cbChannels);
-            this.panel1.Controls.Add(this.cbSamplingRate);
-            this.panel1.Controls.Add(this.cbTimebase);
             this.panel1.Controls.Add(this.btnStart);
             this.panel1.Controls.Add(this.rbETS);
             this.panel1.Controls.Add(this.rbSingle);
             this.panel1.Controls.Add(this.rbAuto);
-            this.panel1.Controls.Add(this.rbRapid);
             this.panel1.Controls.Add(this.rbRepeat);
             this.panel1.Controls.Add(this.rbNone);
             this.panel1.Controls.Add(this.label8);
@@ -88,25 +82,42 @@
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(12, 13);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1018, 113);
             this.panel1.TabIndex = 0;
             // 
-            // button1
+            // txtSampleCount
             // 
-            this.button1.Location = new System.Drawing.Point(401, 73);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 26;
-            this.button1.Text = "Stop";
-            this.button1.UseVisualStyleBackColor = true;
+            this.txtSampleCount.Location = new System.Drawing.Point(580, 28);
+            this.txtSampleCount.Name = "txtSampleCount";
+            this.txtSampleCount.Size = new System.Drawing.Size(95, 20);
+            this.txtSampleCount.TabIndex = 28;
+            // 
+            // btnOpen
+            // 
+            this.btnOpen.Location = new System.Drawing.Point(401, 15);
+            this.btnOpen.Name = "btnOpen";
+            this.btnOpen.Size = new System.Drawing.Size(75, 23);
+            this.btnOpen.TabIndex = 27;
+            this.btnOpen.Text = "Open Unit";
+            this.btnOpen.UseVisualStyleBackColor = true;
+            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            // 
+            // btnStreaming
+            // 
+            this.btnStreaming.Location = new System.Drawing.Point(401, 73);
+            this.btnStreaming.Name = "btnStreaming";
+            this.btnStreaming.Size = new System.Drawing.Size(75, 23);
+            this.btnStreaming.TabIndex = 26;
+            this.btnStreaming.Text = "Streaming";
+            this.btnStreaming.UseVisualStyleBackColor = true;
+            this.btnStreaming.Click += new System.EventHandler(this.btnStreaming_Click);
             // 
             // txtSamplingInterval
             // 
-            this.txtSamplingInterval.Location = new System.Drawing.Point(88, 29);
+            this.txtSamplingInterval.Location = new System.Drawing.Point(98, 47);
             this.txtSamplingInterval.Name = "txtSamplingInterval";
             this.txtSamplingInterval.Size = new System.Drawing.Size(120, 20);
             this.txtSamplingInterval.TabIndex = 25;
@@ -151,22 +162,6 @@
             this.cbChannels.Size = new System.Drawing.Size(95, 21);
             this.cbChannels.TabIndex = 20;
             // 
-            // cbSamplingRate
-            // 
-            this.cbSamplingRate.FormattingEnabled = true;
-            this.cbSamplingRate.Location = new System.Drawing.Point(580, 30);
-            this.cbSamplingRate.Name = "cbSamplingRate";
-            this.cbSamplingRate.Size = new System.Drawing.Size(95, 21);
-            this.cbSamplingRate.TabIndex = 19;
-            // 
-            // cbTimebase
-            // 
-            this.cbTimebase.FormattingEnabled = true;
-            this.cbTimebase.Location = new System.Drawing.Point(87, 68);
-            this.cbTimebase.Name = "cbTimebase";
-            this.cbTimebase.Size = new System.Drawing.Size(121, 21);
-            this.cbTimebase.TabIndex = 18;
-            // 
             // btnStart
             // 
             this.btnStart.Location = new System.Drawing.Point(401, 44);
@@ -175,11 +170,12 @@
             this.btnStart.TabIndex = 16;
             this.btnStart.Text = "Start";
             this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // rbETS
             // 
             this.rbETS.AutoSize = true;
-            this.rbETS.Location = new System.Drawing.Point(325, 75);
+            this.rbETS.Location = new System.Drawing.Point(247, 79);
             this.rbETS.Name = "rbETS";
             this.rbETS.Size = new System.Drawing.Size(46, 17);
             this.rbETS.TabIndex = 15;
@@ -190,7 +186,7 @@
             // rbSingle
             // 
             this.rbSingle.AutoSize = true;
-            this.rbSingle.Location = new System.Drawing.Point(324, 52);
+            this.rbSingle.Location = new System.Drawing.Point(324, 69);
             this.rbSingle.Name = "rbSingle";
             this.rbSingle.Size = new System.Drawing.Size(54, 17);
             this.rbSingle.TabIndex = 14;
@@ -201,24 +197,13 @@
             // rbAuto
             // 
             this.rbAuto.AutoSize = true;
-            this.rbAuto.Location = new System.Drawing.Point(324, 29);
+            this.rbAuto.Location = new System.Drawing.Point(324, 44);
             this.rbAuto.Name = "rbAuto";
             this.rbAuto.Size = new System.Drawing.Size(47, 17);
             this.rbAuto.TabIndex = 13;
             this.rbAuto.TabStop = true;
             this.rbAuto.Text = "Auto";
             this.rbAuto.UseVisualStyleBackColor = true;
-            // 
-            // rbRapid
-            // 
-            this.rbRapid.AutoSize = true;
-            this.rbRapid.Location = new System.Drawing.Point(247, 75);
-            this.rbRapid.Name = "rbRapid";
-            this.rbRapid.Size = new System.Drawing.Size(53, 17);
-            this.rbRapid.TabIndex = 12;
-            this.rbRapid.TabStop = true;
-            this.rbRapid.Text = "Rapid";
-            this.rbRapid.UseVisualStyleBackColor = true;
             // 
             // rbRepeat
             // 
@@ -296,19 +281,10 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "Resolution:";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 73);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Timebase:";
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 33);
+            this.label1.Location = new System.Drawing.Point(14, 50);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(68, 13);
             this.label1.TabIndex = 0;
@@ -316,45 +292,26 @@
             // 
             // txtStatus
             // 
-            this.txtStatus.Location = new System.Drawing.Point(850, 145);
+            this.txtStatus.Location = new System.Drawing.Point(12, 145);
             this.txtStatus.Multiline = true;
             this.txtStatus.Name = "txtStatus";
-            this.txtStatus.Size = new System.Drawing.Size(180, 546);
+            this.txtStatus.Size = new System.Drawing.Size(1018, 546);
             this.txtStatus.TabIndex = 1;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(847, 129);
+            this.label9.Location = new System.Drawing.Point(12, 129);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(40, 13);
             this.label9.TabIndex = 2;
             this.label9.Text = "Status:";
-            // 
-            // cartesianChart1
-            // 
-            this.cartesianChart1.Location = new System.Drawing.Point(12, 145);
-            this.cartesianChart1.Name = "cartesianChart1";
-            this.cartesianChart1.Size = new System.Drawing.Size(832, 546);
-            this.cartesianChart1.TabIndex = 3;
-            this.cartesianChart1.Text = "cartesianChart1";
-            // 
-            // btnOpen
-            // 
-            this.btnOpen.Location = new System.Drawing.Point(401, 15);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(75, 23);
-            this.btnOpen.TabIndex = 27;
-            this.btnOpen.Text = "Open Unit";
-            this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
             // PVLab
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 703);
-            this.Controls.Add(this.cartesianChart1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.txtStatus);
             this.Controls.Add(this.panel1);
@@ -378,28 +335,24 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RadioButton rbETS;
         private System.Windows.Forms.RadioButton rbSingle;
         private System.Windows.Forms.RadioButton rbAuto;
-        private System.Windows.Forms.RadioButton rbRapid;
         private System.Windows.Forms.RadioButton rbRepeat;
         private System.Windows.Forms.RadioButton rbNone;
         private System.Windows.Forms.Button btnStart;
-        private System.Windows.Forms.ComboBox cbTimebase;
         private System.Windows.Forms.ComboBox cbRes;
         private System.Windows.Forms.ComboBox cbCoupling;
         private System.Windows.Forms.ComboBox cbVoltage;
         private System.Windows.Forms.ComboBox cbStreaming;
         private System.Windows.Forms.ComboBox cbChannels;
-        private System.Windows.Forms.ComboBox cbSamplingRate;
         private System.Windows.Forms.TextBox txtStatus;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtSamplingInterval;
-        private System.Windows.Forms.Button button1;
-        private LiveCharts.WinForms.CartesianChart cartesianChart1;
+        private System.Windows.Forms.Button btnStreaming;
         private System.Windows.Forms.Button btnOpen;
+        private System.Windows.Forms.TextBox txtSampleCount;
     }
 }
 
