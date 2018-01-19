@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.txtSampleCount = new System.Windows.Forms.TextBox();
             this.btnOpen = new System.Windows.Forms.Button();
             this.btnStreaming = new System.Windows.Forms.Button();
             this.txtSamplingInterval = new System.Windows.Forms.TextBox();
@@ -53,6 +52,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtRate = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,7 +63,9 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.txtSampleCount);
+            this.panel1.Controls.Add(this.label10);
+            this.panel1.Controls.Add(this.txtRate);
+            this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.btnOpen);
             this.panel1.Controls.Add(this.btnStreaming);
             this.panel1.Controls.Add(this.txtSamplingInterval);
@@ -88,13 +92,6 @@
             this.panel1.Size = new System.Drawing.Size(1018, 113);
             this.panel1.TabIndex = 0;
             // 
-            // txtSampleCount
-            // 
-            this.txtSampleCount.Location = new System.Drawing.Point(580, 28);
-            this.txtSampleCount.Name = "txtSampleCount";
-            this.txtSampleCount.Size = new System.Drawing.Size(95, 20);
-            this.txtSampleCount.TabIndex = 28;
-            // 
             // btnOpen
             // 
             this.btnOpen.Location = new System.Drawing.Point(401, 15);
@@ -117,10 +114,11 @@
             // 
             // txtSamplingInterval
             // 
-            this.txtSamplingInterval.Location = new System.Drawing.Point(98, 47);
+            this.txtSamplingInterval.Location = new System.Drawing.Point(100, 31);
             this.txtSamplingInterval.Name = "txtSamplingInterval";
-            this.txtSamplingInterval.Size = new System.Drawing.Size(120, 20);
+            this.txtSamplingInterval.Size = new System.Drawing.Size(76, 20);
             this.txtSamplingInterval.TabIndex = 25;
+            this.txtSamplingInterval.TextChanged += new System.EventHandler(this.txtSamplingInterval_TextChanged);
             // 
             // cbRes
             // 
@@ -157,7 +155,7 @@
             // cbChannels
             // 
             this.cbChannels.FormattingEnabled = true;
-            this.cbChannels.Location = new System.Drawing.Point(580, 70);
+            this.cbChannels.Location = new System.Drawing.Point(574, 50);
             this.cbChannels.Name = "cbChannels";
             this.cbChannels.Size = new System.Drawing.Size(95, 21);
             this.cbChannels.TabIndex = 20;
@@ -175,7 +173,7 @@
             // rbETS
             // 
             this.rbETS.AutoSize = true;
-            this.rbETS.Location = new System.Drawing.Point(247, 79);
+            this.rbETS.Location = new System.Drawing.Point(247, 71);
             this.rbETS.Name = "rbETS";
             this.rbETS.Size = new System.Drawing.Size(46, 17);
             this.rbETS.TabIndex = 15;
@@ -186,7 +184,7 @@
             // rbSingle
             // 
             this.rbSingle.AutoSize = true;
-            this.rbSingle.Location = new System.Drawing.Point(324, 69);
+            this.rbSingle.Location = new System.Drawing.Point(324, 61);
             this.rbSingle.Name = "rbSingle";
             this.rbSingle.Size = new System.Drawing.Size(54, 17);
             this.rbSingle.TabIndex = 14;
@@ -197,7 +195,7 @@
             // rbAuto
             // 
             this.rbAuto.AutoSize = true;
-            this.rbAuto.Location = new System.Drawing.Point(324, 44);
+            this.rbAuto.Location = new System.Drawing.Point(324, 36);
             this.rbAuto.Name = "rbAuto";
             this.rbAuto.Size = new System.Drawing.Size(47, 17);
             this.rbAuto.TabIndex = 13;
@@ -208,7 +206,7 @@
             // rbRepeat
             // 
             this.rbRepeat.AutoSize = true;
-            this.rbRepeat.Location = new System.Drawing.Point(247, 52);
+            this.rbRepeat.Location = new System.Drawing.Point(247, 44);
             this.rbRepeat.Name = "rbRepeat";
             this.rbRepeat.Size = new System.Drawing.Size(60, 17);
             this.rbRepeat.TabIndex = 11;
@@ -219,7 +217,7 @@
             // rbNone
             // 
             this.rbNone.AutoSize = true;
-            this.rbNone.Location = new System.Drawing.Point(247, 29);
+            this.rbNone.Location = new System.Drawing.Point(247, 21);
             this.rbNone.Name = "rbNone";
             this.rbNone.Size = new System.Drawing.Size(51, 17);
             this.rbNone.TabIndex = 10;
@@ -257,7 +255,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(495, 73);
+            this.label4.Location = new System.Drawing.Point(505, 53);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(54, 13);
             this.label4.TabIndex = 5;
@@ -266,7 +264,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(495, 33);
+            this.label5.Location = new System.Drawing.Point(9, 66);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(79, 13);
             this.label5.TabIndex = 4;
@@ -284,7 +282,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 50);
+            this.label1.Location = new System.Drawing.Point(9, 34);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(68, 13);
             this.label1.TabIndex = 0;
@@ -306,6 +304,31 @@
             this.label9.Size = new System.Drawing.Size(40, 13);
             this.label9.TabIndex = 2;
             this.label9.Text = "Status:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(182, 34);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(53, 13);
+            this.label2.TabIndex = 29;
+            this.label2.Text = "Nano sec";
+            // 
+            // txtRate
+            // 
+            this.txtRate.Location = new System.Drawing.Point(100, 63);
+            this.txtRate.Name = "txtRate";
+            this.txtRate.Size = new System.Drawing.Size(76, 20);
+            this.txtRate.TabIndex = 30;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(182, 68);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(20, 13);
+            this.label10.TabIndex = 31;
+            this.label10.Text = "Hz";
             // 
             // PVLab
             // 
@@ -352,7 +375,9 @@
         private System.Windows.Forms.TextBox txtSamplingInterval;
         private System.Windows.Forms.Button btnStreaming;
         private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.TextBox txtSampleCount;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txtRate;
+        private System.Windows.Forms.Label label10;
     }
 }
 

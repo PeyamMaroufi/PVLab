@@ -28,26 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.liveChart1 = new LiveCharts.WinForms.CartesianChart();
+            this.components = new System.ComponentModel.Container();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.plot1 = new OxyPlot.WindowsForms.PlotView();
             this.SuspendLayout();
             // 
-            // liveChart1
+            // imageList1
             // 
-            this.liveChart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // plot1
+            // 
+            this.plot1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.liveChart1.Location = new System.Drawing.Point(12, 12);
-            this.liveChart1.Name = "liveChart1";
-            this.liveChart1.Size = new System.Drawing.Size(978, 624);
-            this.liveChart1.TabIndex = 0;
-            this.liveChart1.Text = "cartesianChart1";
+            this.plot1.Location = new System.Drawing.Point(12, 12);
+            this.plot1.Name = "plot1";
+            this.plot1.PanCursor = System.Windows.Forms.Cursors.Hand;
+            this.plot1.Size = new System.Drawing.Size(978, 633);
+            this.plot1.TabIndex = 0;
+            this.plot1.Text = "plotView1";
+            this.plot1.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
+            this.plot1.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
+            this.plot1.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
             // 
             // plot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1002, 648);
-            this.Controls.Add(this.liveChart1);
+            this.Controls.Add(this.plot1);
             this.Name = "plot";
             this.Text = "plot";
             this.ResumeLayout(false);
@@ -56,6 +68,7 @@
 
         #endregion
 
-        private LiveCharts.WinForms.CartesianChart liveChart1;
+        private System.Windows.Forms.ImageList imageList1;
+        private OxyPlot.WindowsForms.PlotView plot1;
     }
 }
