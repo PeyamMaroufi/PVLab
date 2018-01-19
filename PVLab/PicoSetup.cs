@@ -220,7 +220,7 @@ namespace PVLab
             status = Imports.MaximumValue(_handle, out _maxValue);
         }
 
-        private async void GetLatestValues()
+        private  void GetLatestValues()
         {
 
             // Initial values of sample and triggers
@@ -266,7 +266,7 @@ namespace PVLab
                         sampleTimeStreaming = (int)(i * SampleInterval);
                         plotRealTime.addPoints(maxValue, sampleTimeStreaming);
                         plotRealTime.updatePlot();
-                        plotRealTime.StopWatch();
+                        //plotRealTime.StopWatch();
 
                         //minValue[i] = adc_to_mv(appBuffersPinned[1].Target[i], (int)_channelSettings[0].range);
                     }

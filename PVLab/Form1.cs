@@ -92,15 +92,15 @@ namespace PVLab
                 if (PicoSetup.d == 1)
                     btnOpen.Text = "Close";
 
-                txtStatus.AppendText(PicoSetup.s);
+                //txtStatus.AppendText(PicoSetup.s);
 
             }
-            else if(Condition() && PicoSetup != null)
+            else if (Condition() && PicoSetup != null)
             {
                 PicoSetup.CloseUnit();
                 PicoSetup = null;
                 btnOpen.Text = "Open Unit";
-                txtStatus.AppendText("Unit closed"+Environment.NewLine);
+                txtStatus.AppendText("Unit closed" + Environment.NewLine);
             }
         }
         private void btnStart_Click(object sender, EventArgs e)

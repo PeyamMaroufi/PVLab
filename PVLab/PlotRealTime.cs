@@ -114,7 +114,7 @@ namespace PVLab
 
         public void addPoints(int sample, int sampleTime)
         {
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.001) };
             timer.Tick += (sender, args) =>
             {
                 var x = sampleTime;
