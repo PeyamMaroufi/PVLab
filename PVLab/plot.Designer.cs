@@ -1,6 +1,6 @@
 ﻿namespace PVLab
 {
-    partial class plot
+    partial class Plot
     {
         /// <summary>
         /// Required designer variable.
@@ -28,47 +28,49 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.plot1 = new OxyPlot.WindowsForms.PlotView();
+            this.plotView1 = new OxyPlot.WindowsForms.PlotView();
+            this.btnStream = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // imageList1
+            // plotView1
             // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.plotView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.plotView1.Location = new System.Drawing.Point(0, 0);
+            this.plotView1.Name = "plotView1";
+            this.plotView1.PanCursor = System.Windows.Forms.Cursors.Hand;
+            this.plotView1.Size = new System.Drawing.Size(1052, 716);
+            this.plotView1.TabIndex = 2;
+            this.plotView1.Text = "plotView1";
+            this.plotView1.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
+            this.plotView1.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
+            this.plotView1.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
             // 
-            // plot1
+            // btnStream
             // 
-            this.plot1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.plot1.Location = new System.Drawing.Point(12, 12);
-            this.plot1.Name = "plot1";
-            this.plot1.PanCursor = System.Windows.Forms.Cursors.Hand;
-            this.plot1.Size = new System.Drawing.Size(978, 633);
-            this.plot1.TabIndex = 0;
-            this.plot1.Text = "plotView1";
-            this.plot1.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
-            this.plot1.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
-            this.plot1.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
+            this.btnStream.Location = new System.Drawing.Point(923, 245);
+            this.btnStream.Name = "btnStream";
+            this.btnStream.Size = new System.Drawing.Size(94, 23);
+            this.btnStream.TabIndex = 3;
+            this.btnStream.Text = "Start Streaming";
+            this.btnStream.UseVisualStyleBackColor = true;
+            this.btnStream.Click += new System.EventHandler(this.btnStream_Click);
             // 
-            // plot
+            // Plot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1002, 648);
-            this.Controls.Add(this.plot1);
-            this.Name = "plot";
-            this.Text = "plot";
+            this.ClientSize = new System.Drawing.Size(1052, 716);
+            this.Controls.Add(this.btnStream);
+            this.Controls.Add(this.plotView1);
+            this.Name = "Plot";
+            this.Text = "Plot";
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ImageList imageList1;
-        private OxyPlot.WindowsForms.PlotView plot1;
+        private OxyPlot.WindowsForms.PlotView plotView1;
+        private System.Windows.Forms.Button btnStream;
     }
 }

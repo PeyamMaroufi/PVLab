@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txtRate = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.btnOpen = new System.Windows.Forms.Button();
             this.btnStreaming = new System.Windows.Forms.Button();
             this.txtSamplingInterval = new System.Windows.Forms.TextBox();
@@ -50,11 +53,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.txtStatus = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtRate = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
+            this.txtStatus = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -91,6 +91,31 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1018, 113);
             this.panel1.TabIndex = 0;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(182, 68);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(20, 13);
+            this.label10.TabIndex = 31;
+            this.label10.Text = "Hz";
+            // 
+            // txtRate
+            // 
+            this.txtRate.Location = new System.Drawing.Point(100, 63);
+            this.txtRate.Name = "txtRate";
+            this.txtRate.Size = new System.Drawing.Size(76, 20);
+            this.txtRate.TabIndex = 30;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(182, 34);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(53, 13);
+            this.label2.TabIndex = 29;
+            this.label2.Text = "Nano sec";
             // 
             // btnOpen
             // 
@@ -288,55 +313,33 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Sampling Int:";
             // 
-            // txtStatus
-            // 
-            this.txtStatus.Location = new System.Drawing.Point(12, 145);
-            this.txtStatus.Multiline = true;
-            this.txtStatus.Name = "txtStatus";
-            this.txtStatus.Size = new System.Drawing.Size(1018, 546);
-            this.txtStatus.TabIndex = 1;
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 129);
+            this.label9.Location = new System.Drawing.Point(10, 131);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(40, 13);
             this.label9.TabIndex = 2;
             this.label9.Text = "Status:";
             // 
-            // label2
+            // txtStatus
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(182, 34);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 13);
-            this.label2.TabIndex = 29;
-            this.label2.Text = "Nano sec";
-            // 
-            // txtRate
-            // 
-            this.txtRate.Location = new System.Drawing.Point(100, 63);
-            this.txtRate.Name = "txtRate";
-            this.txtRate.Size = new System.Drawing.Size(76, 20);
-            this.txtRate.TabIndex = 30;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(182, 68);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(20, 13);
-            this.label10.TabIndex = 31;
-            this.label10.Text = "Hz";
+            this.txtStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtStatus.Location = new System.Drawing.Point(12, 147);
+            this.txtStatus.Multiline = true;
+            this.txtStatus.Name = "txtStatus";
+            this.txtStatus.Size = new System.Drawing.Size(1018, 544);
+            this.txtStatus.TabIndex = 3;
             // 
             // PVLab
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 703);
-            this.Controls.Add(this.label9);
             this.Controls.Add(this.txtStatus);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.panel1);
             this.MaximumSize = new System.Drawing.Size(1058, 742);
             this.MinimumSize = new System.Drawing.Size(1058, 742);
@@ -370,7 +373,6 @@
         private System.Windows.Forms.ComboBox cbVoltage;
         private System.Windows.Forms.ComboBox cbStreaming;
         private System.Windows.Forms.ComboBox cbChannels;
-        private System.Windows.Forms.TextBox txtStatus;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtSamplingInterval;
         private System.Windows.Forms.Button btnStreaming;
@@ -378,6 +380,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtRate;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox txtStatus;
     }
 }
 

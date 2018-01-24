@@ -54,11 +54,12 @@ namespace PVLab
         #endregion
 
         #region UI events
-        private async void btnStreaming_Click(object sender, EventArgs e)
+        private  void btnStreaming_Click(object sender, EventArgs e)
         {
             if (PicoSetup != null && Condition())
             {
-                await Task.Run(() => PicoSetup.Streaming());
+                PicoSetup.Streaming();
+                
             }
             else
             {
@@ -67,6 +68,8 @@ namespace PVLab
 
 
         }
+
+
         private void btnOpen_Click(object sender, EventArgs e)
         {
 
@@ -92,7 +95,7 @@ namespace PVLab
                 if (PicoSetup.d == 1)
                     btnOpen.Text = "Close";
 
-                //txtStatus.AppendText(PicoSetup.s);
+                txtStatus.AppendText(PicoSetup.s);
 
             }
             else if (Condition() && PicoSetup != null)

@@ -18,7 +18,7 @@ using System.Text;
 
 namespace PS5000AImports
 {
-    class Imports
+    public class Imports
     {
         #region constants
         // Drivers name ps5000a for pico 5000a series

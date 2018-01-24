@@ -51,6 +51,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -65,8 +66,6 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomDataPointConverter.cs" />
-    <Compile Include="CustomTooltipProvider.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,30 +76,28 @@
     <Compile Include="PicoPinnedArray.cs" />
     <Compile Include="PicoSetup.cs" />
     <Compile Include="PicoStatus.cs" />
-    <Compile Include="plot.cs">
+    <Compile Include="Plot.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="plot.Designer.cs">
-      <DependentUpon>plot.cs</DependentUpon>
+    <Compile Include="Plot.Designer.cs">
+      <DependentUpon>Plot.cs</DependentUpon>
     </Compile>
-    <Compile Include="PlotRealTime.cs">
+    <Compile Include="RealTid.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PlotRealTime.Designer.cs">
-      <DependentUpon>PlotRealTime.cs</DependentUpon>
+    <Compile Include="RealTid.Designer.cs">
+      <DependentUpon>RealTid.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PS5000AImports.cs" />
     <Compile Include="PS5000APinnedArray.cs" />
+    <Compile Include="StreamingClass.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="plot.resx">
-      <DependentUpon>plot.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PlotRealTime.resx">
-      <DependentUpon>PlotRealTime.cs</DependentUpon>
+    <EmbeddedResource Include="Plot.resx">
+      <DependentUpon>Plot.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -111,6 +108,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RealTid.resx">
+      <DependentUpon>RealTid.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

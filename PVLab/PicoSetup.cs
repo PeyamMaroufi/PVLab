@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using PicoPinnedArray;
 using PicoStatus;
 using PS5000AImports;
 
 namespace PVLab
 {
-    struct ChannelSettings
+    public struct ChannelSettings
     {
         public Imports.Range range;
         public bool enabled;
@@ -32,8 +33,8 @@ namespace PVLab
 
 
         // Graph class
-        plot Plot;
-        PlotRealTime plotRealTime;
+        Plot plot;
+        StreamingClass StreamingSet;
 
 
         uint _timebase;
@@ -78,9 +79,7 @@ namespace PVLab
 
         public PicoSetup()
         {
-            buffers = new short[1][];
-            channelBuffers = new short[1][];
-            appBuffersPinned = new PinnedArray<short>[1];
+
 
 
         }
@@ -142,7 +141,7 @@ namespace PVLab
                     {
                         short requiredSize;
                         Imports.GetUnitInfo(_handle, UnitInfo, 80, out requiredSize, (uint)i);
-                        s += (description[i] + UnitInfo + "\r\n") + Environment.NewLine;
+                        s += (description[i] + UnitInfo + "\n") + Environment.NewLine;
 
                         // We make a new channelsetting in order to make the rest to work
                         // channelsetting is a structure defined earlier.
@@ -195,120 +194,37 @@ namespace PVLab
         {
             if (_handle != 0)
             {
-                // Find Max to scaling
-                FindMax();
+                Plot plot = new Plot(_handle)
+                {
+                    SelChannelr = SelChannel,
+                    SelCoupr = SelCoup,
+                    selRange = SelVolt,
+                    resolutionr = resolution,
+                    SelChannelIndexr = SelChannelIndex,
+                    SampleIntervalr = SampleInterval,
+                    _channelSettingsr = _channelSettings,
 
-                // Set the channel
-                SetChannel();
 
-                // Set buffering()
-                SetBuffer();
+                };
+                //// Find Max to scaling
+                plot.FindMax();
 
-                // Set up Streaming
-                SetStreaming();
+                //// Set the channel
+                plot.SetChannel();
+
+
+
+                plot.Show();
+                
+
+                //// Set up Streaming
+                //plotRealTime.SetStreaming();
+
 
                 // Get latest value
-                GetLatestValues();
+                //plotRealTime.GetStreamingLatestValues();
 
             }
-        }
-        #endregion
-
-        private void FindMax()
-        {
-            uint status;
-            status = Imports.MaximumValue(_handle, out _maxValue);
-        }
-
-        private  void GetLatestValues()
-        {
-
-            // Initial values of sample and triggers
-            Thread.Sleep(0);
-
-            plotRealTime = new PlotRealTime();
-
-            int totalSamples = 0;
-            uint triggeredAt = 0;
-            _ready = false;
-
-
-            // Get the latest value for one channel.
-            uint status;
-            status = Imports.GetStreamingLatestValues(_handle, streamingCallback, IntPtr.Zero);
-
-            // Place for values
-            maxValue = new int[_startIndex + _sampleCount];
-            minValue = new int[_startIndex + _sampleCount];
-
-
-            // Initiate the graph
-            plotRealTime.initPlot();
-            plotRealTime.Show();
-            // Tell user
-            int sampleTimeStreaming;
-            while (!_autoStop)
-            {
-                Thread.Sleep(0);
-                appBuffersPinned[0] = new PinnedArray<short>(buffers[0]);
-
-                if (_ready && _sampleCount > 0)
-                {
-                    if (_trig > 0)
-                    {
-                        triggeredAt = (uint)totalSamples + _trigAt;
-                    }
-                    totalSamples += _sampleCount;
-
-                    for (uint i = _startIndex; i < (_startIndex + _sampleCount); i++)
-                    {
-                        int maxValue = adc_to_mv(appBuffersPinned[0].Target[i], inputRanges[SelChannelIndex]);
-                        sampleTimeStreaming = (int)(i * SampleInterval);
-                        plotRealTime.addPoints(maxValue, sampleTimeStreaming);
-                        plotRealTime.updatePlot();
-                        //plotRealTime.StopWatch();
-
-                        //minValue[i] = adc_to_mv(appBuffersPinned[1].Target[i], (int)_channelSettings[0].range);
-                    }
-
-                }
-            }
-        }
-
-        private void SetStreaming()
-        {
-            _sampleCount = 0;
-            _startIndex = 0;
-            _trigAt = 0;
-            _overflow = 0;
-            _autoStop = false;
-
-            // Run streaming must follow with GetStreamingLatestValues
-            uint status;
-            uint _sampleIntervall = SampleInterval;
-            status = Imports.RunStreaming(_handle, ref _sampleIntervall, Imports.ReportedTimeUnits.NanoSeconds, 0, streamingSamples, 1, 1, Imports.RatioMode.None, (uint)bufferSize);
-
-            if (_autoStop)
-                Imports.Stop(_handle);
-        }
-
-        private void SetBuffer()
-        {
-            // Needed to make buffering work
-            buffers[0] = new short[bufferSize];
-            channelBuffers[0] = new short[bufferSize];
-            int i = 1;
-            // Set buffering. only one channel so use SetDataBuffer instead of SetDataBuffers
-            uint status;
-            status = Imports.SetDataBuffer(_handle, SelChannel, buffers[0], bufferSize, 0, Imports.RatioMode.None);
-        }
-
-        #region BlockCallBack for capturing data
-        private void BlockCallback(short handle, short status, IntPtr pVoid)
-        {
-            // flag to say done reading data
-            if (status != (short)StatusCodes.PICO_CANCELLED)
-                _ready = true;
         }
         #endregion
 
@@ -464,6 +380,16 @@ namespace PVLab
         }
         #endregion
 
+        #region BlockCallBack for capturing data
+        private void BlockCallback(short handle, short status, IntPtr pVoid)
+        {
+            // flag to say done reading data
+            if (status != (short)StatusCodes.PICO_CANCELLED)
+                _ready = true;
+        }
+        #endregion
+
+
         #region Plot Function for Capturing
         /// <summary>
         ///  Calls Plot form and passes data to it to make a graph
@@ -472,53 +398,21 @@ namespace PVLab
         {
             int[] samples = data;
             int[] sampleTime = time;
-            plot Plot = new plot();
+            Plot plot = new Plot(_handle);
+            plot.Show();
             int rangePlot = SelChannelIndex;
             if (samples != null)
             {
-                Plot.Samples = samples;
-                Plot.SampleTime = sampleTime;
-                Plot.Draw(rangePlot);
-                Plot.Show();
+                plot.Samples = samples;
+                plot.SampleTime = sampleTime;
+
+                plot.Draw(rangePlot);
+                plot.Show();
 
             }
         }
         #endregion
 
-        #region Callback Function. is Needed for streaming.
-        //Callback funktion for Streaming
-        public void streamingCallback(short handle,
-                                int noOfSamples,
-                                uint startIndex,
-                                short overflow,
-                                uint triggerAt,
-                                short triggered,
-                                short autoStop,
-                                IntPtr pVoid)
-        {
-            // used for streaming
-            _sampleCount = noOfSamples;
-            _startIndex = startIndex;
-            _autoStop = autoStop != 0;
-
-            _ready = true;
-
-            // flags to show if & where a trigger has occurred
-            _trig = triggered;
-
-            if (_trig != 0)
-                _trigAt = triggerAt;
-
-            if (overflow != 0)
-                _overflow = overflow;
-
-            if (_sampleCount != 0)
-            {
-                Array.Copy(buffers[0], _startIndex, channelBuffers[0], _startIndex, _sampleCount); //max
-
-            }
-        }
-        #endregion
 
         #region Converters. Converts ADC and milivolts
         /// <summary>
