@@ -41,11 +41,6 @@
             this.cbStreaming = new System.Windows.Forms.ComboBox();
             this.cbChannels = new System.Windows.Forms.ComboBox();
             this.btnStart = new System.Windows.Forms.Button();
-            this.rbETS = new System.Windows.Forms.RadioButton();
-            this.rbSingle = new System.Windows.Forms.RadioButton();
-            this.rbAuto = new System.Windows.Forms.RadioButton();
-            this.rbRepeat = new System.Windows.Forms.RadioButton();
-            this.rbNone = new System.Windows.Forms.RadioButton();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -75,11 +70,6 @@
             this.panel1.Controls.Add(this.cbStreaming);
             this.panel1.Controls.Add(this.cbChannels);
             this.panel1.Controls.Add(this.btnStart);
-            this.panel1.Controls.Add(this.rbETS);
-            this.panel1.Controls.Add(this.rbSingle);
-            this.panel1.Controls.Add(this.rbAuto);
-            this.panel1.Controls.Add(this.rbRepeat);
-            this.panel1.Controls.Add(this.rbNone);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label6);
@@ -195,61 +185,6 @@
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
-            // rbETS
-            // 
-            this.rbETS.AutoSize = true;
-            this.rbETS.Location = new System.Drawing.Point(247, 71);
-            this.rbETS.Name = "rbETS";
-            this.rbETS.Size = new System.Drawing.Size(46, 17);
-            this.rbETS.TabIndex = 15;
-            this.rbETS.TabStop = true;
-            this.rbETS.Text = "ETS";
-            this.rbETS.UseVisualStyleBackColor = true;
-            // 
-            // rbSingle
-            // 
-            this.rbSingle.AutoSize = true;
-            this.rbSingle.Location = new System.Drawing.Point(324, 61);
-            this.rbSingle.Name = "rbSingle";
-            this.rbSingle.Size = new System.Drawing.Size(54, 17);
-            this.rbSingle.TabIndex = 14;
-            this.rbSingle.TabStop = true;
-            this.rbSingle.Text = "Single";
-            this.rbSingle.UseVisualStyleBackColor = true;
-            // 
-            // rbAuto
-            // 
-            this.rbAuto.AutoSize = true;
-            this.rbAuto.Location = new System.Drawing.Point(324, 36);
-            this.rbAuto.Name = "rbAuto";
-            this.rbAuto.Size = new System.Drawing.Size(47, 17);
-            this.rbAuto.TabIndex = 13;
-            this.rbAuto.TabStop = true;
-            this.rbAuto.Text = "Auto";
-            this.rbAuto.UseVisualStyleBackColor = true;
-            // 
-            // rbRepeat
-            // 
-            this.rbRepeat.AutoSize = true;
-            this.rbRepeat.Location = new System.Drawing.Point(247, 44);
-            this.rbRepeat.Name = "rbRepeat";
-            this.rbRepeat.Size = new System.Drawing.Size(60, 17);
-            this.rbRepeat.TabIndex = 11;
-            this.rbRepeat.TabStop = true;
-            this.rbRepeat.Text = "Repeat";
-            this.rbRepeat.UseVisualStyleBackColor = true;
-            // 
-            // rbNone
-            // 
-            this.rbNone.AutoSize = true;
-            this.rbNone.Location = new System.Drawing.Point(247, 21);
-            this.rbNone.Name = "rbNone";
-            this.rbNone.Size = new System.Drawing.Size(51, 17);
-            this.rbNone.TabIndex = 10;
-            this.rbNone.TabStop = true;
-            this.rbNone.Text = "None";
-            this.rbNone.UseVisualStyleBackColor = true;
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -362,11 +297,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.RadioButton rbETS;
-        private System.Windows.Forms.RadioButton rbSingle;
-        private System.Windows.Forms.RadioButton rbAuto;
-        private System.Windows.Forms.RadioButton rbRepeat;
-        private System.Windows.Forms.RadioButton rbNone;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.ComboBox cbRes;
         private System.Windows.Forms.ComboBox cbCoupling;

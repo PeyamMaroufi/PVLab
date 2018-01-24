@@ -167,16 +167,7 @@ namespace PVLab
             plotView1.Model = myModel;
 
         }
-
-
-
-
-
-
-
-
-
-
+        
 
 
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
@@ -234,6 +225,7 @@ namespace PVLab
 
             }
             Thread.Sleep(200);
+
             myTimer.Enabled = true;
 
         }
@@ -246,6 +238,7 @@ namespace PVLab
             {
                 Interval = 1000
             };
+            cbDirection.DataSource = Enum.GetValues(typeof(Imports.RatioMode));
         }
 
         private void btnStream_Click(object sender, EventArgs e)
@@ -330,5 +323,7 @@ namespace PVLab
 
             //Imports.Stop(_handle);
         }
+
+      
     }
 }
