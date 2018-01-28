@@ -4,4 +4,4 @@ A UI is made for reading , recording and streaming samples. You are able to trig
 
 You want to develop further, fork and make your changes and just let me know. 
 
-Do not forget to download Shared folder avaibale at Pico's github to run this model
+Do not forget to download 'shared' folder to run this model
