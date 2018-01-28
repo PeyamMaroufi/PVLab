@@ -28,41 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.plotView1 = new OxyPlot.WindowsForms.PlotView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbPoints = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.btnStream = new System.Windows.Forms.Button();
             this.rbETS = new System.Windows.Forms.RadioButton();
             this.rbSingle = new System.Windows.Forms.RadioButton();
             this.rbAuto = new System.Windows.Forms.RadioButton();
             this.rbRepeat = new System.Windows.Forms.RadioButton();
             this.rbNone = new System.Windows.Forms.RadioButton();
-            this.cbDirection = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.plotView1 = new OxyPlot.WindowsForms.PlotView();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // plotView1
-            // 
-            this.plotView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.plotView1.Location = new System.Drawing.Point(12, 110);
-            this.plotView1.Name = "plotView1";
-            this.plotView1.PanCursor = System.Windows.Forms.Cursors.Hand;
-            this.plotView1.Size = new System.Drawing.Size(1025, 584);
-            this.plotView1.TabIndex = 22;
-            this.plotView1.Text = "plotView1";
-            this.plotView1.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
-            this.plotView1.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
-            this.plotView1.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.cbDirection);
+            this.groupBox1.Controls.Add(this.lbPoints);
+            this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.btnStream);
             this.groupBox1.Controls.Add(this.rbETS);
             this.groupBox1.Controls.Add(this.rbSingle);
@@ -76,6 +61,23 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Control";
             // 
+            // lbPoints
+            // 
+            this.lbPoints.AutoSize = true;
+            this.lbPoints.Location = new System.Drawing.Point(81, 37);
+            this.lbPoints.Name = "lbPoints";
+            this.lbPoints.Size = new System.Drawing.Size(0, 13);
+            this.lbPoints.TabIndex = 31;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(36, 37);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(39, 13);
+            this.label2.TabIndex = 30;
+            this.label2.Text = "Points:";
+            // 
             // btnStream
             // 
             this.btnStream.Location = new System.Drawing.Point(562, 33);
@@ -84,6 +86,7 @@
             this.btnStream.TabIndex = 27;
             this.btnStream.Text = "Start";
             this.btnStream.UseVisualStyleBackColor = true;
+            this.btnStream.Click += new System.EventHandler(this.btnStream_Click);
             // 
             // rbETS
             // 
@@ -140,30 +143,25 @@
             this.rbNone.Text = "None";
             this.rbNone.UseVisualStyleBackColor = true;
             // 
-            // cbDirection
+            // plotView1
             // 
-            this.cbDirection.FormattingEnabled = true;
-            this.cbDirection.Location = new System.Drawing.Point(799, 33);
-            this.cbDirection.Name = "cbDirection";
-            this.cbDirection.Size = new System.Drawing.Size(121, 21);
-            this.cbDirection.TabIndex = 28;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(707, 37);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
-            this.label1.TabIndex = 29;
-            this.label1.Text = "Ratio Mode: ";
+            this.plotView1.Location = new System.Drawing.Point(12, 110);
+            this.plotView1.Name = "plotView1";
+            this.plotView1.PanCursor = System.Windows.Forms.Cursors.Hand;
+            this.plotView1.Size = new System.Drawing.Size(1025, 596);
+            this.plotView1.TabIndex = 24;
+            this.plotView1.Text = "plotView1";
+            this.plotView1.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
+            this.plotView1.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
+            this.plotView1.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
             // 
             // Plot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1049, 706);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.plotView1);
+            this.Controls.Add(this.groupBox1);
             this.Name = "Plot";
             this.Text = "Plot";
             this.groupBox1.ResumeLayout(false);
@@ -173,7 +171,6 @@
         }
 
         #endregion
-        private OxyPlot.WindowsForms.PlotView plotView1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnStream;
         private System.Windows.Forms.RadioButton rbETS;
@@ -181,7 +178,8 @@
         private System.Windows.Forms.RadioButton rbAuto;
         private System.Windows.Forms.RadioButton rbRepeat;
         private System.Windows.Forms.RadioButton rbNone;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cbDirection;
+        private OxyPlot.WindowsForms.PlotView plotView1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lbPoints;
     }
 }

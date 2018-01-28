@@ -18,11 +18,11 @@ namespace PVLab
     }
 
 
-    class PicoSetup
+    class SettingUpBlockRecordAndStream
     {
 
         #region Private and public members
-        int[] sampleTime;
+        public int[] sampleTime;
         private short _handle;
         public const int BUFFER_SIZE = 1024;
         public const int MAX_CHANNELS = 4;
@@ -77,12 +77,14 @@ namespace PVLab
         public static int d;
         #endregion
 
-        public PicoSetup()
+        #region Construction
+        public SettingUpBlockRecordAndStream()
         {
 
 
 
         }
+        #endregion
 
         #region Open device method
 
@@ -181,6 +183,193 @@ namespace PVLab
         }
         #endregion
 
+        #region RunBlock Function to capture measurement
+        /// <summary>
+        ///  we use this method to do a runblock
+        /// </summary>
+        /// 
+        private void BlockCallback(short handle, short status, IntPtr pVoid)
+        {
+            // flag to say done reading data
+            if (status != (short)StatusCodes.PICO_CANCELLED)
+                _ready = true;
+        }
+
+        private void SetChannel()
+        {
+
+            // Set it to channel
+            uint status;
+            status = Imports.SetChannel(_handle, SelChannel, 1, SelCoup, SelVolt, 0);
+
+        }
+
+        private void RunBlock()
+        {
+            // determine maximum value for scaling
+            Imports.MaximumValue(_handle, out _maxValue);
+
+
+            // Setting channel. Is needed for everytime you want to do something. eg when you change the voltage range, resulotion.
+            uint status;
+            status = Imports.SetChannel(_handle, SelChannel, 1, SelCoup, SelVolt, 0);
+
+
+
+            // SetsimplerTrigger function
+            short enable = 0;
+            uint delay = 0;
+            short threshold = 25000;
+            short auto = 0;
+            status = Imports.SetSimpleTrigger(_handle, enable, SelChannel, threshold, Imports.ThresholdDirection.Rising, delay, auto);
+
+
+            _ready = false;
+            _callbackDelegate = BlockCallback;
+            _channelCount = 1;
+
+            bool retry;
+            uint sampleCount = 100;
+            PinnedArray<short>[] minPinned = new PinnedArray<short>[_channelCount];
+            PinnedArray<short>[] maxPinned = new PinnedArray<short>[_channelCount];
+
+
+            int timeIndisposed;
+
+            short[] minBuffers = new short[sampleCount];
+            short[] maxBuffers = new short[sampleCount];
+
+
+            // Setting the buffer. Using set BufferS fo all channels. The HV91 uses setbuffer instead of setBuffers. the reason
+            // is that we use only one channel for a certain purpose.
+            status = Imports.SetDataBuffers(_handle, SelChannel, maxBuffers, minBuffers, (int)sampleCount, 0, Imports.RatioMode.None);
+
+
+
+            /*  find the maximum number of samples, the time interval (in timeUnits),
+             *		 the most suitable time units, and the maximum _oversample at the current _timebase*/
+            int timeInterval;
+            int maxSamples;
+
+            // Over own _timebase. This will slow the operation but should work
+            _timebase = (uint)(125000000 * SampleInterval * Math.Pow(10, -9)) + 2;
+            while (Imports.GetTimebase(_handle, _timebase, (int)sampleCount, out timeInterval, out maxSamples, 0) != 0)
+            {
+                // This will try to come to our chosen timebase as close as possible.
+                _timebase++;
+
+            }
+
+
+            /* Start it collecting, then wait for completion*/
+            _ready = false;
+            _callbackDelegate = BlockCallback;
+
+
+            do
+            {
+                retry = false;
+                status = Imports.RunBlock(_handle, 0, (int)sampleCount, _timebase, out timeIndisposed, 0, _callbackDelegate, IntPtr.Zero);
+
+                if (status == (short)StatusCodes.PICO_POWER_SUPPLY_CONNECTED || status == (short)StatusCodes.PICO_POWER_SUPPLY_NOT_CONNECTED || status == (short)StatusCodes.PICO_POWER_SUPPLY_UNDERVOLTAGE)
+                {
+                    status = Imports.ChangePowerSource(_handle, status);
+                    retry = true;
+                }
+                else
+                {
+                    //txtStatus.AppendText(("Run Block Called\n") + Environment.NewLine);
+                }
+            }
+            while (retry);
+
+            //txtStatus.AppendText(("Waiting for Data\n") + Environment.NewLine);
+
+            while (!_ready)
+            {
+                Thread.Sleep(500);
+            }
+
+            Imports.Stop(_handle);
+
+
+
+            if (_ready)
+            {
+                short overflow;
+
+                // Now get the values 
+                status = Imports.GetValues(_handle, 0, ref sampleCount, 1, Imports.DownSamplingMode.None, 0, out overflow);
+                minPinned[0] = new PinnedArray<short>(minBuffers);
+                maxPinned[0] = new PinnedArray<short>(maxBuffers);
+                samples = new int[sampleCount];
+                sampleTime = new int[sampleCount];
+
+                if (status == (short)StatusCodes.PICO_OK)
+                {
+
+                    // Scale the data with respect to the maximum value.
+                    for (int x = 0; x < sampleCount; x++)
+                    {
+                        samples[x] = adc_to_mv(maxPinned[0].Target[x], (int)_channelSettings[0].range);
+                    }
+
+                    // Make the time to ms
+                    for (int i = 0; i < sampleCount; i++)
+                    {
+                        sampleTime[i] = (int)(i * SampleInterval);
+                    }
+
+
+                    // Calling th drawing method
+                    DrawingChart(samples, sampleTime);
+
+                }
+                else
+                {
+                    //txtStatus.AppendText(("No Data\n") + Environment.NewLine);
+
+                }
+            }
+            else
+            {
+                //txtStatus.AppendText(("data collection aborted\n") + Environment.NewLine);
+            }
+
+            Imports.Stop(_handle);
+
+            foreach (PinnedArray<short> p in minPinned)
+            {
+                if (p != null)
+                    p.Dispose();
+            }
+            foreach (PinnedArray<short> p in maxPinned)
+            {
+                if (p != null)
+                    p.Dispose();
+            }
+        }
+
+        /// <summary>
+        ///  Are used to converts between values. Are usable in triggered state
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="range"></param>
+        /// <returns></returns>
+        // Convert an 16-bit ADC count into milivolts
+        int adc_to_mv(short v, int range)
+        {
+            return (v * inputRanges[range]) / _maxValue;
+        }
+
+        // Convert a millivolt value into a 16-bit ADC count
+        short mv_to_adc(short mv, short ch)
+        {
+            return (short)((mv * _maxValue) / inputRanges[ch]);
+        }
+
+        #endregion
+
         #region Streaming method calls
         /// <summary>
         /// Here we first need to find the maximum value of the streamin based on current setting of resolution
@@ -215,180 +404,11 @@ namespace PVLab
 
 
                 plot.Show();
-                
 
-                //// Set up Streaming
-                //plotRealTime.SetStreaming();
-
-
-                // Get latest value
-                //plotRealTime.GetStreamingLatestValues();
 
             }
         }
         #endregion
-
-        #region RunBlock Function to capture measurement
-        /// <summary>
-        ///  we use this method to do a runblock
-        /// </summary>
-        private void RunBlock()
-        {
-
-            Imports.MaximumValue(_handle, out _maxValue);
-            //txtStatus.AppendText("Max Value is " + _maxValue.ToString() + Environment.NewLine);
-
-            // Setting channel. Is needed for everytime you want to do something. eg when you change the voltage range, resulotion.
-            uint status;
-            status = Imports.SetChannel(_handle, SelChannel, 1, SelCoup, SelVolt, 0);
-            //txtStatus.AppendText("Set the channel succeful " + status + Environment.NewLine);
-
-            // SetsimplerTrigger function
-            short enable = 0;
-            uint delay = 0;
-            short threshold = 25000;
-            short auto = 0;
-            status = Imports.SetSimpleTrigger(_handle, enable, SelChannel, threshold, Imports.ThresholdDirection.Rising, delay, auto);
-            //txtStatus.AppendText("SetSimpleTrigger succeful " + status + Environment.NewLine);
-
-            _ready = false;
-            _callbackDelegate = BlockCallback;
-            _channelCount = 1;
-
-            bool retry;
-            uint sampleCount = 100;
-            PinnedArray<short>[] minPinned = new PinnedArray<short>[_channelCount];
-            PinnedArray<short>[] maxPinned = new PinnedArray<short>[_channelCount];
-            //txtStatus.AppendText("PinnedArray created succefull y" + Environment.NewLine);
-
-            int timeIndisposed;
-
-            short[] minBuffers = new short[sampleCount];
-            short[] maxBuffers = new short[sampleCount];
-            //txtStatus.AppendText("Max/Min Buffers created succefully " + Environment.NewLine);
-
-
-            status = Imports.SetDataBuffers(_handle, SelChannel, maxBuffers, minBuffers, (int)sampleCount, 0, Imports.RatioMode.None);
-
-            //txtStatus.AppendText(("BlockData\n") + Environment.NewLine);
-
-            /*  find the maximum number of samples, the time interval (in timeUnits),
-             *		 the most suitable time units, and the maximum _oversample at the current _timebase*/
-            int timeInterval;
-            int maxSamples;
-            while (Imports.GetTimebase(_handle, _timebase, (int)sampleCount, out timeInterval, out maxSamples, 0) != 0)
-            {
-                //txtStatus.AppendText(("Timebase selection\n") + Environment.NewLine);
-                _timebase++;
-
-            }
-            //txtStatus.AppendText(("Timebase Set\n") + Environment.NewLine);
-
-            /* Start it collecting, then wait for completion*/
-            _ready = false;
-            _callbackDelegate = BlockCallback;
-
-
-            _timebase = (uint)(125000000 * SampleInterval * Math.Pow(10, -9)) + 2;
-
-            do
-            {
-                retry = false;
-                status = Imports.RunBlock(_handle, 0, (int)sampleCount, _timebase, out timeIndisposed, 0, _callbackDelegate, IntPtr.Zero);
-
-                if (status == (short)StatusCodes.PICO_POWER_SUPPLY_CONNECTED || status == (short)StatusCodes.PICO_POWER_SUPPLY_NOT_CONNECTED || status == (short)StatusCodes.PICO_POWER_SUPPLY_UNDERVOLTAGE)
-                {
-                    status = Imports.ChangePowerSource(_handle, status);
-                    retry = true;
-                }
-                else
-                {
-                    //txtStatus.AppendText(("Run Block Called\n") + Environment.NewLine);
-                }
-            }
-            while (retry);
-
-            //txtStatus.AppendText(("Waiting for Data\n") + Environment.NewLine);
-
-            while (!_ready)
-            {
-                Thread.Sleep(500);
-            }
-
-            Imports.Stop(_handle);
-
-
-
-            if (_ready)
-            {
-                short overflow;
-                status = Imports.GetValues(_handle, 0, ref sampleCount, 1, Imports.DownSamplingMode.None, 0, out overflow);
-                //txtStatus.AppendText(("Getting Values ") + Environment.NewLine);
-                minPinned[0] = new PinnedArray<short>(minBuffers);
-                maxPinned[0] = new PinnedArray<short>(maxBuffers);
-                samples = new int[sampleCount];
-                sampleTime = new int[sampleCount];
-                if (status == (short)StatusCodes.PICO_OK)
-                {
-
-                    int x;
-
-                    //txtStatus.AppendText(("Have Data\n") + Environment.NewLine);
-
-                    for (x = 0; x < sampleCount; x++)
-                    {
-                        samples[x] = adc_to_mv(maxPinned[0].Target[x], (int)_channelSettings[0].range);
-
-                    }
-
-
-                    for (int i = 0; i < sampleCount; i++)
-                    {
-
-                        sampleTime[i] = (int)(i * SampleInterval);
-
-                    }
-
-
-                    // Calling th drawing method
-                    DrawingChart(samples, sampleTime);
-
-                }
-                else
-                {
-                    //txtStatus.AppendText(("No Data\n") + Environment.NewLine);
-
-                }
-            }
-            else
-            {
-                //txtStatus.AppendText(("data collection aborted\n") + Environment.NewLine);
-            }
-
-            Imports.Stop(_handle);
-
-            foreach (PinnedArray<short> p in minPinned)
-            {
-                if (p != null)
-                    p.Dispose();
-            }
-            foreach (PinnedArray<short> p in maxPinned)
-            {
-                if (p != null)
-                    p.Dispose();
-            }
-        }
-        #endregion
-
-        #region BlockCallBack for capturing data
-        private void BlockCallback(short handle, short status, IntPtr pVoid)
-        {
-            // flag to say done reading data
-            if (status != (short)StatusCodes.PICO_CANCELLED)
-                _ready = true;
-        }
-        #endregion
-
 
         #region Plot Function for Capturing
         /// <summary>
@@ -413,36 +433,6 @@ namespace PVLab
         }
         #endregion
 
-
-        #region Converters. Converts ADC and milivolts
-        /// <summary>
-        ///  Are used to converts between values. Are usable in triggered state
-        /// </summary>
-        /// <param name="v"></param>
-        /// <param name="range"></param>
-        /// <returns></returns>
-        // Convert an 16-bit ADC count into milivolts
-        int adc_to_mv(short v, int range)
-        {
-            return (v * inputRanges[range]) / _maxValue;
-        }
-
-        // Convert a millivolt value into a 16-bit ADC count
-        short mv_to_adc(short mv, short ch)
-        {
-            return (short)((mv * _maxValue) / inputRanges[ch]);
-        }
-
-        #endregion
-
-        private void SetChannel()
-        {
-
-            // Set it to channel
-            uint status;
-            status = Imports.SetChannel(_handle, SelChannel, 1, SelCoup, SelVolt, 0);
-
-        }
 
     }
 }

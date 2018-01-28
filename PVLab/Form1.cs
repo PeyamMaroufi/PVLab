@@ -21,11 +21,11 @@ namespace PVLab
 {
     public partial class PVLab : Form
     {
+        #region Variable
         private short _handle;
         ChannelSettings[] _channelSettings;
-        PicoSetup PicoSetup;
-
-
+        SettingUpBlockRecordAndStream PicoSetup;
+        #endregion
 
         #region Ctor
         public PVLab()
@@ -54,12 +54,17 @@ namespace PVLab
         #endregion
 
         #region UI events
-        private  void btnStreaming_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Streaming button. Open button needs to be clicked before streaming.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnStreaming_Click(object sender, EventArgs e)
         {
             if (PicoSetup != null && Condition())
             {
                 PicoSetup.Streaming();
-                
+
             }
             else
             {
@@ -69,13 +74,17 @@ namespace PVLab
 
         }
 
-
+        /// <summary>
+        /// When program opens the driver.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOpen_Click(object sender, EventArgs e)
         {
 
             if (Condition() && PicoSetup == null)
             {
-                PicoSetup = new PicoSetup()
+                PicoSetup = new SettingUpBlockRecordAndStream()
                 {
                     SelChannel = (Imports.Channel)cbChannels.SelectedIndex,
                     SelCoup = (Imports.Coupling)cbCoupling.SelectedIndex,
@@ -87,15 +96,15 @@ namespace PVLab
 
                 PicoSetup.OpenUnit();
 
-                if (PicoSetup.t == 0)
+                if (SettingUpBlockRecordAndStream.t == 0)
                 {
                     MessageBox.Show("Cannot open device error code:", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Close();
                 }
-                if (PicoSetup.d == 1)
+                if (SettingUpBlockRecordAndStream.d == 1)
                     btnOpen.Text = "Close";
 
-                txtStatus.AppendText(PicoSetup.s);
+                txtStatus.AppendText(SettingUpBlockRecordAndStream.s);
 
             }
             else if (Condition() && PicoSetup != null)
@@ -106,6 +115,12 @@ namespace PVLab
                 txtStatus.AppendText("Unit closed" + Environment.NewLine);
             }
         }
+
+        /// <summary>
+        /// Starts recording for some seconds.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnStart_Click(object sender, EventArgs e)
         {
             if (PicoSetup != null && Condition())
@@ -118,10 +133,12 @@ namespace PVLab
             }
 
         }
-        #endregion
 
-
-        #region Help function
+        /// <summary>
+        /// Update the textbox with sampling frequency
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtSamplingInterval_TextChanged(object sender, EventArgs e)
         {
 
@@ -130,6 +147,12 @@ namespace PVLab
 
         }
         #endregion
+
+        #region Condition 
+        /// <summary>
+        /// Conditions to run the program. 
+        /// </summary>
+        /// <returns></returns>
         private bool Condition()
         {
             bool okej = false;
@@ -143,6 +166,7 @@ namespace PVLab
             else { MessageBox.Show("Error: Please make sure that sampling intervall is an integer or you have clicked on Open"); }
             return okej;
         }
+        #endregion
     }
 
 }

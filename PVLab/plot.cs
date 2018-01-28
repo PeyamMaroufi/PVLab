@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace PVLab
     {
         System.Timers.Timer myTimer;
 
+
         #region private members
         private readonly short _handle;
         int _channelCount = 1;
@@ -29,6 +31,8 @@ namespace PVLab
         PlotModel myModel;
         LinearAxis linearAxis1;
         LinearAxis linearAxis2;
+
+        Thread thread;
 
         public int[] Samples { get; set; }
         public int[] SampleTime { get; set; }
@@ -59,11 +63,16 @@ namespace PVLab
         uint _startIndex;
         public double[] SampleCont;
         public int[] sampleTimeCont;
-        LineSeries series1;
+        public LineSeries series1;
+
+        int numofEl = 0;
+        int z = 1;
         #endregion
 
-
-
+        #region properties
+        /// <summary>
+        /// Setting variable passed from other classes
+        /// </summary>
         public Imports.Channel SelChannelr { get; set; }
         public Imports.Coupling SelCoupr { get; set; }
         public Imports.DeviceResolution resolutionr { get; set; }
@@ -72,7 +81,21 @@ namespace PVLab
         public uint SampleIntervalr { get; set; }
         public ChannelSettings[] _channelSettingsr { get; set; }
 
+        #endregion
 
+        #region Methods required for streaming
+
+        /* For streaming following are requiree:
+         * 1. finding max for current resolution.
+         * 2. setting channel for current contiguration.
+         * 3. buffering set up
+         * 4. running streamin
+         * 5. getting values
+         */
+
+        /// <summary>
+        /// Find max for current resolution
+        /// </summary>
         public void FindMax()
         {
             uint status;
@@ -80,6 +103,9 @@ namespace PVLab
 
         }
 
+        /// <summary>
+        /// setting channel for current configuration
+        /// </summary>
         public void SetChannel()
         {
             uint status;
@@ -88,7 +114,17 @@ namespace PVLab
 
 
 
-
+        /// <summary>
+        /// Required for current streaming especially for getting values and buffering
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <param name="noOfSamples"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="overflow"></param>
+        /// <param name="triggerAt"></param>
+        /// <param name="triggered"></param>
+        /// <param name="autoStop"></param>
+        /// <param name="pVoid"></param>
         public void StreamingCallback(short handle,
                           int noOfSamples,
                           uint startIndex,
@@ -113,136 +149,20 @@ namespace PVLab
             {
                 for (uint ch = 0; ch < _channelCount * 2; ch += 2)
                 {
-                    //if (_channelSettings[(int)(Imports.Channel.ChannelA + (ch / 2))].enabled)
-                    //{
 
                     Array.Copy(buffers[0], _startIndex, appBuffers[0], _startIndex, _sampleCount); //max
-                    Array.Copy(buffers[1], _startIndex, appBuffers[1], _startIndex, _sampleCount);//min
+                    Array.Copy(buffers[1], _startIndex, appBuffers[1], _startIndex, _sampleCount); // min
 
-                    //}
                 }
             }
         }
 
-
-        public double adc_to_mv(int raw, int ch)
-        {
-            return (raw * inputRanges[ch]) / _maxValue; ;
-        }
-
-
-        /* ------------------------------------------ PLOTS ----------------------------------*/
-        /* ------------------------------------------ PLOTS ----------------------------------*/
-        /* ------------------------------------------ PLOTS ----------------------------------*/
-        /* ------------------------------------------ PLOTS ----------------------------------*/
-
-
-
-
-
-        public void Draw(int range)
-        {
-            myTimer.Enabled = false;
-            btnStream.Visible = false;
-            myModel = new PlotModel { Title = "Example 1" };
-            linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom };
-            linearAxis2 = new LinearAxis { Position = AxisPosition.Left };
-            myModel.Axes.Add(linearAxis1);
-            myModel.Axes.Add(linearAxis2);
-            LineSeries series1 = new LineSeries
-            {
-                MarkerType = MarkerType.Circle,
-                StrokeThickness = 1,
-                MarkerSize = 1,
-                Title = "Voltage level"
-            };
-
-
-            for (int i = 0; i < Samples.Length; i++)
-            {
-                series1.Points.Add(new OxyPlot.DataPoint(SampleTime[i], Samples[i]));
-            }
-
-            myModel.Series.Add(series1);
-            plotView1.Model = myModel;
-
-        }
-        
-
-
-        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+        /// <summary>
+        /// Running streaming.
+        /// </summary>
+        public void RunStreaming()
         {
 
-            if (myModel == null)
-            {
-                btnStream.Enabled = true;
-                myModel = new PlotModel { Title = "Example 1" };
-                linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom };
-                linearAxis2 = new LinearAxis { Position = AxisPosition.Left };
-                myModel.Axes.Add(linearAxis1);
-                myModel.Axes.Add(linearAxis2);
-                series1 = new LineSeries
-                {
-                    MarkerType = MarkerType.Circle,
-                    StrokeThickness = 1,
-                    MarkerSize = 1,
-                    Title = "Voltage level"
-                };
-
-                for (int i = 0; i < SampleCont.Length; i++)
-                {
-                    series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
-                }
-
-                myModel.Series.Add(series1);
-                plotView1.Model = myModel;
-            }
-            else
-            {
-                new Thread(() =>
-                {
-                    Thread.CurrentThread.IsBackground = true;
-                    series1.Points.Clear();
-                   
-                }).Start();
-
-                if (plotView1.InvokeRequired)
-                {
-                    plotView1.Invoke((MethodInvoker)delegate ()
-                    {
-                        for (int i = 0; i < SampleCont.Length; i++)
-                        {
-                            series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
-                        }
-                        plotView1.InvalidatePlot(true);
-                    });
-                        
-                }
-                else
-                {
-
-                }
-
-            }
-            Thread.Sleep(200);
-
-            myTimer.Enabled = true;
-
-        }
-
-        public Plot(short handle)
-        {
-            InitializeComponent();
-            _handle = handle;
-            myTimer = new System.Timers.Timer
-            {
-                Interval = 1000
-            };
-            cbDirection.DataSource = Enum.GetValues(typeof(Imports.RatioMode));
-        }
-
-        private void btnStream_Click(object sender, EventArgs e)
-        {
             int sampleCount = 1024 * 100; /*  *100 is to make sure buffer large enough */
 
             appBuffers = new short[_channelCount * 2][];
@@ -251,11 +171,8 @@ namespace PVLab
             uint preTrigger = 0;
             int totalSamples = 0;
             uint triggeredAt = 0;
-            uint sampleInterval = 1;
+            uint sampleInterval = SampleIntervalr;
             uint status;
-
-
-
 
             // Use Pinned Arrays for the application buffers
             PinnedArray<short>[] appBuffersPinned = new PinnedArray<short>[_channelCount * 2];
@@ -274,7 +191,7 @@ namespace PVLab
                 status = Imports.SetDataBuffers(_handle, (Imports.Channel)(ch / 2), buffers[ch], buffers[ch + 1], sampleCount, 0, Imports.RatioMode.None);
             }
             _autoStop = false;
-            status = Imports.RunStreaming(_handle, ref sampleInterval, Imports.ReportedTimeUnits.MicroSeconds, preTrigger, 1000000 - preTrigger, 1, 1, Imports.RatioMode.None, (uint)sampleCount);
+            status = Imports.RunStreaming(_handle, ref sampleInterval, Imports.ReportedTimeUnits.NanoSeconds, preTrigger, 1000000 - preTrigger, 1, 1, Imports.RatioMode.None, (uint)sampleCount);
             SampleCont = new double[appBuffersPinned[0].Target.Length];
             sampleTimeCont = new int[appBuffersPinned[0].Target.Length];
 
@@ -286,14 +203,10 @@ namespace PVLab
                 _ready = false;
                 status = Imports.GetStreamingLatestValues(_handle, StreamingCallback, IntPtr.Zero);
 
-                if (_ready)
-                {
-                    myTimer.Enabled = true;
-                    myTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
-                }
+
                 if (_ready && _sampleCount > 0) /* can be ready and have no data, if autoStop has fired */
                 {
-
+                    //myTimer.Enabled = true;
 
                     if (_trig > 0)
                     {
@@ -310,20 +223,206 @@ namespace PVLab
                     for (uint i = _startIndex; i < (_startIndex + _sampleCount); i++)
                     {
                         SampleCont[i] = adc_to_mv(appBuffersPinned[0].Target[i], inputRanges[SelChannelIndexr]);
-                        sampleTimeCont[i] = (int)(i * SampleIntervalr);
+                        sampleTimeCont[i] = (int)((i * SampleIntervalr) / 1000000);
 
                     }
 
                 }
-
             }
-            //myTimer.Stop();
-
-
-
-            //Imports.Stop(_handle);
         }
 
-      
+
+        /// <summary>
+        /// Scaling from sample values to mv. can require modification
+        /// </summary>
+        /// <param name="raw"></param>
+        /// <param name="ch"></param>
+        /// <returns></returns>
+        public double adc_to_mv(int raw, int ch)
+        {
+            return (raw * inputRanges[ch]) / _maxValue; ;
+        }
+        #endregion
+
+        #region Plotting
+        /* Using two plots, one for recording where only plot is showing.
+         * Second plot is streaming plot. It is a Oxyplot for Winform which requires 
+         * less modification than MS chart control
+         * In Streaming plot we first create a Model if there isn't already one. In case user 
+         * click on record first and then then streaming there  is already one. checking for null
+         * plot is also required for updating.
+         */
+
+        /// <summary>
+        /// Draw method for record plot
+        /// </summary>
+        /// <param name="range"></param>
+        public void Draw(int range)
+        {
+            myTimer.Enabled = false;
+            plotView1.Dock = DockStyle.Fill;
+            myModel = new PlotModel { Title = "Voltage level" };
+            linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom, Title = "Time in nanosec" };
+            linearAxis2 = new LinearAxis { Position = AxisPosition.Left, Title = "Voltage" };
+            myModel.Axes.Add(linearAxis1);
+            myModel.Axes.Add(linearAxis2);
+            
+            for (int i = 0; i < Samples.Length; i++)
+            {
+                series1.Points.Add(new OxyPlot.DataPoint(SampleTime[i], Samples[i]));
+            }
+
+            myModel.Series.Add(series1);
+            plotView1.Model = myModel;
+
+        }
+
+
+        /// <summary>
+        /// Streaming plot.
+        /// </summary>
+        public void StreamingPlot()
+        {
+            myModel = new PlotModel { Title = "Voltage" };
+            linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom };
+            linearAxis2 = new LinearAxis { Position = AxisPosition.Left };
+            myModel.Axes.Add(linearAxis1);
+            myModel.Axes.Add(linearAxis2);
+
+
+            for (int i = 0; i < SampleCont.Length; i++)
+            {
+                series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
+            }
+
+            myModel.Series.Add(series1);
+            plotView1.Dock = DockStyle.None;
+            plotView1.Model = myModel;
+
+        }
+
+        /// <summary>
+        /// Updating the chart. Invoke is required for not blocking UI thread
+        /// since we use a timer we do calculations and reading in a other thread
+        /// than UI thread. and for getting back those values and show them on UI
+        /// thread invoking is required.
+        /// </summary>
+        public void updatePlot()
+        {
+            if (plotView1.InvokeRequired)
+            {
+                plotView1.Invoke((MethodInvoker)delegate ()
+                {
+                    series1.Points.Clear();
+                    lbPoints.Text = series1.Points.Count.ToString();
+                    for (int i = 0; i < SampleCont.Length; i++)
+                    {
+                        series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
+                    }
+                    //myModel.Series.Add(series1);
+                    plotView1.InvalidatePlot(true);
+                });
+
+            }
+            else
+            {
+                series1.Points.Clear();
+                lbPoints.Text = series1.Points.Count.ToString();
+                for (int i = 0; i < SampleCont.Length; i++)
+                {
+                    series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
+                }
+                //myModel.Series.Add(series1);
+                plotView1.InvalidatePlot(true);
+            }
+        }
+        #endregion
+
+        #region Timer method
+        /// <summary>
+        /// checking for myModel. to choose between updating and creating.
+        /// reason for this check is first time the mymodel is running it needs
+        /// to be created. second time and after we use the same model.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            if (myModel == null)
+            {
+                StreamingPlot();
+                Thread.Sleep(1000);
+            }
+            else
+            {
+                updatePlot();
+                Thread.Sleep(1000);
+
+            }
+
+            myTimer.Start();
+
+        }
+
+        #endregion
+
+        #region Construction
+        /// <summary>
+        /// Construction.
+        /// </summary>
+        /// <param name="handle"></param>
+        public Plot(short handle)
+        {
+            InitializeComponent();
+            _handle = handle;
+            myTimer = new System.Timers.Timer
+            {
+                Interval = 1000
+            };
+            cbDirection.DataSource = Enum.GetValues(typeof(Imports.RatioMode));
+            series1 = new LineSeries
+            {
+                MarkerType = MarkerType.Circle,
+                StrokeThickness = 1,
+                MarkerSize = 1,
+                Smooth = true,
+                Title = "Voltage level"
+
+
+            };
+        }
+        #endregion
+
+        #region UI event
+        /// <summary>
+        /// Click event. moving calculation and reading samples to an other thread
+        /// to avoid freezing and getting more performance.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnStream_Click(object sender, EventArgs e)
+        {
+
+
+            if (thread == null)
+            {
+                thread = new Thread(new ThreadStart(RunStreaming));
+                thread.Start();
+                btnStream.Text = "Stop Streaming";
+
+            }
+            else
+            {
+                thread.Abort();
+                this.Close();
+            }
+            myTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
+            myTimer.Enabled = true;
+        }
+        #endregion
+
     }
+
+
 }
+
