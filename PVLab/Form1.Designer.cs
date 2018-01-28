@@ -79,7 +79,7 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(12, 13);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1018, 113);
+            this.panel1.Size = new System.Drawing.Size(1086, 113);
             this.panel1.TabIndex = 0;
             // 
             // label10
@@ -265,19 +265,17 @@
             this.txtStatus.Location = new System.Drawing.Point(12, 147);
             this.txtStatus.Multiline = true;
             this.txtStatus.Name = "txtStatus";
-            this.txtStatus.Size = new System.Drawing.Size(1018, 544);
+            this.txtStatus.Size = new System.Drawing.Size(1018, 128);
             this.txtStatus.TabIndex = 3;
             // 
             // PVLab
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1042, 703);
+            this.ClientSize = new System.Drawing.Size(1042, 287);
             this.Controls.Add(this.txtStatus);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.panel1);
-            this.MaximumSize = new System.Drawing.Size(1058, 742);
-            this.MinimumSize = new System.Drawing.Size(1058, 742);
             this.Name = "PVLab";
             this.Text = "PVLab";
             this.panel1.ResumeLayout(false);
@@ -303,13 +301,13 @@
         private System.Windows.Forms.ComboBox cbVoltage;
         private System.Windows.Forms.ComboBox cbStreaming;
         private System.Windows.Forms.ComboBox cbChannels;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtSamplingInterval;
         private System.Windows.Forms.Button btnStreaming;
         private System.Windows.Forms.Button btnOpen;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtRate;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtStatus;
     }
 }

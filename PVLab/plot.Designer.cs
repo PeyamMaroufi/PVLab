@@ -38,6 +38,7 @@
             this.rbRepeat = new System.Windows.Forms.RadioButton();
             this.rbNone = new System.Windows.Forms.RadioButton();
             this.plotView1 = new OxyPlot.WindowsForms.PlotView();
+            this.txtStatus = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -148,18 +149,27 @@
             this.plotView1.Location = new System.Drawing.Point(12, 110);
             this.plotView1.Name = "plotView1";
             this.plotView1.PanCursor = System.Windows.Forms.Cursors.Hand;
-            this.plotView1.Size = new System.Drawing.Size(1025, 596);
+            this.plotView1.Size = new System.Drawing.Size(767, 584);
             this.plotView1.TabIndex = 24;
             this.plotView1.Text = "plotView1";
             this.plotView1.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
             this.plotView1.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
             this.plotView1.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
             // 
+            // txtStatus
+            // 
+            this.txtStatus.Location = new System.Drawing.Point(795, 110);
+            this.txtStatus.Multiline = true;
+            this.txtStatus.Name = "txtStatus";
+            this.txtStatus.Size = new System.Drawing.Size(242, 584);
+            this.txtStatus.TabIndex = 25;
+            // 
             // Plot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1049, 706);
+            this.Controls.Add(this.txtStatus);
             this.Controls.Add(this.plotView1);
             this.Controls.Add(this.groupBox1);
             this.Name = "Plot";
@@ -167,6 +177,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -181,5 +192,6 @@
         private OxyPlot.WindowsForms.PlotView plotView1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lbPoints;
+        private System.Windows.Forms.TextBox txtStatus;
     }
 }

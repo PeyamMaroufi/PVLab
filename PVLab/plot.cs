@@ -4,18 +4,10 @@ using OxyPlot.Series;
 using PicoPinnedArray;
 using PS5000AImports;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
+
 
 namespace PVLab
 {
@@ -33,7 +25,7 @@ namespace PVLab
         LinearAxis linearAxis2;
 
         Thread thread;
-
+        public static string ss;
         public int[] Samples { get; set; }
         public int[] SampleTime { get; set; }
 
@@ -83,6 +75,35 @@ namespace PVLab
 
         #endregion
 
+        #region Construction
+        /// <summary>
+        /// Construction.
+        /// </summary>
+        /// <param name="handle"></param>
+        public Plot(short handle)
+        {
+            InitializeComponent();
+            _handle = handle;
+            myTimer = new System.Timers.Timer
+            {
+                Interval = 1000
+            };
+
+            series1 = new LineSeries
+            {
+                MarkerType = MarkerType.Circle,
+                StrokeThickness = 1,
+                MarkerSize = 1,
+                Smooth = true,
+                Title = "Voltage level"
+
+
+            };
+            ss = "Plot form is created . Construction is called" + Environment.NewLine;
+            txtStatus.AppendText(ss);
+        }
+        #endregion
+
         #region Methods required for streaming
 
         /* For streaming following are requiree:
@@ -100,7 +121,8 @@ namespace PVLab
         {
             uint status;
             status = Imports.MaximumValue(_handle, out _maxValue); // Set max. ADC Counts
-
+            ss = ("Max value for current resolution founded" + _maxValue.ToString()) + Environment.NewLine;
+            txtStatus.AppendText(ss);
         }
 
         /// <summary>
@@ -110,6 +132,8 @@ namespace PVLab
         {
             uint status;
             status = Imports.SetChannel(_handle, SelChannelr, 1, SelCoupr, selRange, 0);
+            ss = ("Set channel is done") + Environment.NewLine;
+            txtStatus.AppendText(ss);
         }
 
 
@@ -162,7 +186,8 @@ namespace PVLab
         /// </summary>
         public void RunStreaming()
         {
-
+            ss = ("Run streaming is initiated") + Environment.NewLine;
+            txtStatus.AppendText(ss);
             int sampleCount = 1024 * 100; /*  *100 is to make sure buffer large enough */
 
             appBuffers = new short[_channelCount * 2][];
@@ -194,8 +219,8 @@ namespace PVLab
             status = Imports.RunStreaming(_handle, ref sampleInterval, Imports.ReportedTimeUnits.NanoSeconds, preTrigger, 1000000 - preTrigger, 1, 1, Imports.RatioMode.None, (uint)sampleCount);
             SampleCont = new double[appBuffersPinned[0].Target.Length];
             sampleTimeCont = new int[appBuffersPinned[0].Target.Length];
-
-
+            ss = "Run streaming done" + Environment.NewLine;
+            txtStatus.AppendText(ss);
             while (!_autoStop)
             {
                 /* Poll until data is received. Until then, GetStreamingLatestValues wont call the callback */
@@ -259,6 +284,8 @@ namespace PVLab
         /// <param name="range"></param>
         public void Draw(int range)
         {
+            ss = "Recording plot is called." + Environment.NewLine;
+            txtStatus.AppendText(ss);
             myTimer.Enabled = false;
             plotView1.Dock = DockStyle.Fill;
             myModel = new PlotModel { Title = "Voltage level" };
@@ -266,7 +293,7 @@ namespace PVLab
             linearAxis2 = new LinearAxis { Position = AxisPosition.Left, Title = "Voltage" };
             myModel.Axes.Add(linearAxis1);
             myModel.Axes.Add(linearAxis2);
-            
+
             for (int i = 0; i < Samples.Length; i++)
             {
                 series1.Points.Add(new OxyPlot.DataPoint(SampleTime[i], Samples[i]));
@@ -274,7 +301,8 @@ namespace PVLab
 
             myModel.Series.Add(series1);
             plotView1.Model = myModel;
-
+            ss = "Recording plot is  succesfully created." + Environment.NewLine;
+            txtStatus.AppendText(ss);
         }
 
 
@@ -283,6 +311,8 @@ namespace PVLab
         /// </summary>
         public void StreamingPlot()
         {
+            ss = "New streaming plot is starting" + Environment.NewLine;
+            txtStatus.AppendText(ss);
             myModel = new PlotModel { Title = "Voltage" };
             linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom };
             linearAxis2 = new LinearAxis { Position = AxisPosition.Left };
@@ -298,7 +328,8 @@ namespace PVLab
             myModel.Series.Add(series1);
             plotView1.Dock = DockStyle.None;
             plotView1.Model = myModel;
-
+            ss = "New streaming plot is created succesfuly" + Environment.NewLine;
+            txtStatus.AppendText(ss);
         }
 
         /// <summary>
@@ -309,6 +340,7 @@ namespace PVLab
         /// </summary>
         public void updatePlot()
         {
+            
             if (plotView1.InvokeRequired)
             {
                 plotView1.Invoke((MethodInvoker)delegate ()
@@ -327,6 +359,7 @@ namespace PVLab
             else
             {
                 series1.Points.Clear();
+                
                 lbPoints.Text = series1.Points.Count.ToString();
                 for (int i = 0; i < SampleCont.Length; i++)
                 {
@@ -348,6 +381,8 @@ namespace PVLab
         /// <param name="e"></param>
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
+            ss = "Timer elapsed" + Environment.NewLine;
+            txtStatus.AppendText(ss);
             if (myModel == null)
             {
                 StreamingPlot();
@@ -366,33 +401,6 @@ namespace PVLab
 
         #endregion
 
-        #region Construction
-        /// <summary>
-        /// Construction.
-        /// </summary>
-        /// <param name="handle"></param>
-        public Plot(short handle)
-        {
-            InitializeComponent();
-            _handle = handle;
-            myTimer = new System.Timers.Timer
-            {
-                Interval = 1000
-            };
-            cbDirection.DataSource = Enum.GetValues(typeof(Imports.RatioMode));
-            series1 = new LineSeries
-            {
-                MarkerType = MarkerType.Circle,
-                StrokeThickness = 1,
-                MarkerSize = 1,
-                Smooth = true,
-                Title = "Voltage level"
-
-
-            };
-        }
-        #endregion
-
         #region UI event
         /// <summary>
         /// Click event. moving calculation and reading samples to an other thread
@@ -402,10 +410,13 @@ namespace PVLab
         /// <param name="e"></param>
         private void btnStream_Click(object sender, EventArgs e)
         {
-
+            ss = "Start Streaming button is clicked" + Environment.NewLine;
+            txtStatus.AppendText(ss);
 
             if (thread == null)
             {
+                ss = "Thread was null and therefor gets created" + Environment.NewLine;
+                txtStatus.AppendText(ss);
                 thread = new Thread(new ThreadStart(RunStreaming));
                 thread.Start();
                 btnStream.Text = "Stop Streaming";
@@ -413,11 +424,15 @@ namespace PVLab
             }
             else
             {
+                ss = "Aborting thread. A temporary solution" + Environment.NewLine;
+                txtStatus.AppendText(ss);
                 thread.Abort();
-                this.Close();
+
             }
             myTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
             myTimer.Enabled = true;
+            ss = "Timer Started" + Environment.NewLine;
+            txtStatus.AppendText(ss);
         }
         #endregion
 
