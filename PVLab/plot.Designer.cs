@@ -32,13 +32,14 @@
             this.lbPoints = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.btnStream = new System.Windows.Forms.Button();
-            this.rbETS = new System.Windows.Forms.RadioButton();
             this.rbSingle = new System.Windows.Forms.RadioButton();
             this.rbAuto = new System.Windows.Forms.RadioButton();
             this.rbRepeat = new System.Windows.Forms.RadioButton();
             this.rbNone = new System.Windows.Forms.RadioButton();
             this.plotView1 = new OxyPlot.WindowsForms.PlotView();
             this.txtStatus = new System.Windows.Forms.TextBox();
+            this.cbDirection = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,10 +48,11 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.cbDirection);
             this.groupBox1.Controls.Add(this.lbPoints);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.btnStream);
-            this.groupBox1.Controls.Add(this.rbETS);
             this.groupBox1.Controls.Add(this.rbSingle);
             this.groupBox1.Controls.Add(this.rbAuto);
             this.groupBox1.Controls.Add(this.rbRepeat);
@@ -73,7 +75,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(36, 37);
+            this.label2.Location = new System.Drawing.Point(36, 39);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 30;
@@ -89,27 +91,17 @@
             this.btnStream.UseVisualStyleBackColor = true;
             this.btnStream.Click += new System.EventHandler(this.btnStream_Click);
             // 
-            // rbETS
-            // 
-            this.rbETS.AutoSize = true;
-            this.rbETS.Location = new System.Drawing.Point(414, 35);
-            this.rbETS.Name = "rbETS";
-            this.rbETS.Size = new System.Drawing.Size(46, 17);
-            this.rbETS.TabIndex = 26;
-            this.rbETS.TabStop = true;
-            this.rbETS.Text = "ETS";
-            this.rbETS.UseVisualStyleBackColor = true;
-            // 
             // rbSingle
             // 
             this.rbSingle.AutoSize = true;
-            this.rbSingle.Location = new System.Drawing.Point(484, 35);
+            this.rbSingle.Location = new System.Drawing.Point(412, 37);
             this.rbSingle.Name = "rbSingle";
             this.rbSingle.Size = new System.Drawing.Size(54, 17);
             this.rbSingle.TabIndex = 25;
             this.rbSingle.TabStop = true;
             this.rbSingle.Text = "Single";
             this.rbSingle.UseVisualStyleBackColor = true;
+            this.rbSingle.CheckedChanged += new System.EventHandler(this.rbSingle_CheckedChanged);
             // 
             // rbAuto
             // 
@@ -121,6 +113,7 @@
             this.rbAuto.TabStop = true;
             this.rbAuto.Text = "Auto";
             this.rbAuto.UseVisualStyleBackColor = true;
+            this.rbAuto.CheckedChanged += new System.EventHandler(this.rbAuto_CheckedChanged);
             // 
             // rbRepeat
             // 
@@ -132,6 +125,7 @@
             this.rbRepeat.TabStop = true;
             this.rbRepeat.Text = "Repeat";
             this.rbRepeat.UseVisualStyleBackColor = true;
+            this.rbRepeat.CheckedChanged += new System.EventHandler(this.rbRepeat_CheckedChanged);
             // 
             // rbNone
             // 
@@ -143,6 +137,7 @@
             this.rbNone.TabStop = true;
             this.rbNone.Text = "None";
             this.rbNone.UseVisualStyleBackColor = true;
+            this.rbNone.CheckedChanged += new System.EventHandler(this.rbNone_CheckedChanged);
             // 
             // plotView1
             // 
@@ -164,6 +159,23 @@
             this.txtStatus.Size = new System.Drawing.Size(242, 584);
             this.txtStatus.TabIndex = 25;
             // 
+            // cbDirection
+            // 
+            this.cbDirection.FormattingEnabled = true;
+            this.cbDirection.Location = new System.Drawing.Point(821, 35);
+            this.cbDirection.Name = "cbDirection";
+            this.cbDirection.Size = new System.Drawing.Size(171, 21);
+            this.cbDirection.TabIndex = 32;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(757, 39);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.TabIndex = 33;
+            this.label1.Text = "Direction: ";
+            // 
             // Plot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -184,7 +196,6 @@
         #endregion
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnStream;
-        private System.Windows.Forms.RadioButton rbETS;
         private System.Windows.Forms.RadioButton rbSingle;
         private System.Windows.Forms.RadioButton rbAuto;
         private System.Windows.Forms.RadioButton rbRepeat;
@@ -193,5 +204,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lbPoints;
         private System.Windows.Forms.TextBox txtStatus;
+        private System.Windows.Forms.ComboBox cbDirection;
+        private System.Windows.Forms.Label label1;
     }
 }

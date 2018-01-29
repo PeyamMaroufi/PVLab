@@ -84,6 +84,11 @@ namespace PVLab
         {
             InitializeComponent();
             _handle = handle;
+
+        }
+
+        public void SetupEverythingUI()
+        {
             myTimer = new System.Timers.Timer
             {
                 Interval = 1000
@@ -101,6 +106,8 @@ namespace PVLab
             };
             ss = "Plot form is created . Construction is called" + Environment.NewLine;
             txtStatus.AppendText(ss);
+            cbDirection.DataSource = Enum.GetValues(typeof(Imports.ThresholdDirection));
+
         }
         #endregion
 
@@ -340,7 +347,7 @@ namespace PVLab
         /// </summary>
         public void updatePlot()
         {
-            
+
             if (plotView1.InvokeRequired)
             {
                 plotView1.Invoke((MethodInvoker)delegate ()
@@ -359,7 +366,7 @@ namespace PVLab
             else
             {
                 series1.Points.Clear();
-                
+
                 lbPoints.Text = series1.Points.Count.ToString();
                 for (int i = 0; i < SampleCont.Length; i++)
                 {
@@ -427,6 +434,7 @@ namespace PVLab
                 ss = "Aborting thread. A temporary solution" + Environment.NewLine;
                 txtStatus.AppendText(ss);
                 thread.Abort();
+                thread = null;
 
             }
             myTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
@@ -434,8 +442,38 @@ namespace PVLab
             ss = "Timer Started" + Environment.NewLine;
             txtStatus.AppendText(ss);
         }
-        #endregion
 
+
+        /// <summary>
+        /// Before trigger you need to close the thread.
+        /// To avoid complexity , ETS is intentionally not included.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rbRepeat_CheckedChanged(object sender, EventArgs e)
+        {
+            if (thread != null)
+                MessageBox.Show("Close streaming before choosing trigger!");
+        }
+
+        private void rbNone_CheckedChanged(object sender, EventArgs e)
+        {
+            if (thread != null)
+                MessageBox.Show("Close streaming before choosing trigger!");
+        }
+
+        private void rbAuto_CheckedChanged(object sender, EventArgs e)
+        {
+            if (thread != null)
+                MessageBox.Show("Close streaming before choosing trigger!");
+        }
+
+        private void rbSingle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (thread != null)
+                MessageBox.Show("Close streaming before choosing trigger!");
+        }
+        #endregion
     }
 
 
