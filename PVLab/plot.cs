@@ -2,6 +2,7 @@
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using PicoPinnedArray;
+using PicoStatus;
 using PS5000AImports;
 using System;
 using System.Threading;
@@ -13,21 +14,28 @@ namespace PVLab
 {
     public partial class Plot : Form
     {
-        System.Timers.Timer myTimer;
 
 
         #region private members
+        System.Timers.Timer myTimer;
         private readonly short _handle;
         int _channelCount = 1;
         private ChannelSettings[] _channelSettings;
         PlotModel myModel;
         LinearAxis linearAxis1;
         LinearAxis linearAxis2;
+        private Imports.ps5000aBlockReady _callbackDelegate;
+
 
         Thread thread;
+        uint _timebase;
         public static string ss;
         public int[] Samples { get; set; }
         public int[] SampleTime { get; set; }
+
+        public int[] samplesTrigger;
+        public int[] sampleTimeTrigger;
+
 
         public int SamplesCont { get; set; }
         public int SampleTimeCont { get; set; }
@@ -84,15 +92,17 @@ namespace PVLab
         {
             InitializeComponent();
             _handle = handle;
-
-        }
-
-        public void SetupEverythingUI()
-        {
             myTimer = new System.Timers.Timer
             {
                 Interval = 1000
             };
+
+            SetupEverythingUI();
+        }
+
+        public void SetupEverythingUI()
+        {
+
 
             series1 = new LineSeries
             {
@@ -194,7 +204,15 @@ namespace PVLab
         public void RunStreaming()
         {
             ss = ("Run streaming is initiated") + Environment.NewLine;
-            txtStatus.AppendText(ss);
+            if (txtStatus.InvokeRequired)
+            {
+                txtStatus.Invoke((MethodInvoker)delegate ()
+                 {
+                     txtStatus.AppendText(ss);
+
+                 });
+            }
+
             int sampleCount = 1024 * 100; /*  *100 is to make sure buffer large enough */
 
             appBuffers = new short[_channelCount * 2][];
@@ -226,8 +244,7 @@ namespace PVLab
             status = Imports.RunStreaming(_handle, ref sampleInterval, Imports.ReportedTimeUnits.NanoSeconds, preTrigger, 1000000 - preTrigger, 1, 1, Imports.RatioMode.None, (uint)sampleCount);
             SampleCont = new double[appBuffersPinned[0].Target.Length];
             sampleTimeCont = new int[appBuffersPinned[0].Target.Length];
-            ss = "Run streaming done" + Environment.NewLine;
-            txtStatus.AppendText(ss);
+
             while (!_autoStop)
             {
                 /* Poll until data is received. Until then, GetStreamingLatestValues wont call the callback */
@@ -319,7 +336,7 @@ namespace PVLab
         public void StreamingPlot()
         {
             ss = "New streaming plot is starting" + Environment.NewLine;
-            txtStatus.AppendText(ss);
+            
             myModel = new PlotModel { Title = "Voltage" };
             linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom };
             linearAxis2 = new LinearAxis { Position = AxisPosition.Left };
@@ -336,7 +353,7 @@ namespace PVLab
             plotView1.Dock = DockStyle.None;
             plotView1.Model = myModel;
             ss = "New streaming plot is created succesfuly" + Environment.NewLine;
-            txtStatus.AppendText(ss);
+            
         }
 
         /// <summary>
@@ -345,7 +362,7 @@ namespace PVLab
         /// than UI thread. and for getting back those values and show them on UI
         /// thread invoking is required.
         /// </summary>
-        public void updatePlot()
+        public void UpdatePlot()
         {
 
             if (plotView1.InvokeRequired)
@@ -389,16 +406,25 @@ namespace PVLab
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             ss = "Timer elapsed" + Environment.NewLine;
-            txtStatus.AppendText(ss);
+            if (txtStatus.InvokeRequired)
+            {
+                txtStatus.Invoke((MethodInvoker)delegate ()
+                {
+                    txtStatus.AppendText(ss);
+                });
+
+            }
+
+            
             if (myModel == null)
             {
                 StreamingPlot();
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             else
             {
-                updatePlot();
-                Thread.Sleep(1000);
+                UpdatePlot();
+                Thread.Sleep(500);
 
             }
 
@@ -437,6 +463,7 @@ namespace PVLab
                 thread = null;
 
             }
+
             myTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
             myTimer.Enabled = true;
             ss = "Timer Started" + Environment.NewLine;

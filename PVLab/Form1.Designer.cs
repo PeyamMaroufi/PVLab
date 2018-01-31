@@ -38,12 +38,10 @@
             this.cbRes = new System.Windows.Forms.ComboBox();
             this.cbCoupling = new System.Windows.Forms.ComboBox();
             this.cbVoltage = new System.Windows.Forms.ComboBox();
-            this.cbStreaming = new System.Windows.Forms.ComboBox();
             this.cbChannels = new System.Windows.Forms.ComboBox();
             this.btnStart = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -67,19 +65,17 @@
             this.panel1.Controls.Add(this.cbRes);
             this.panel1.Controls.Add(this.cbCoupling);
             this.panel1.Controls.Add(this.cbVoltage);
-            this.panel1.Controls.Add(this.cbStreaming);
             this.panel1.Controls.Add(this.cbChannels);
             this.panel1.Controls.Add(this.btnStart);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(12, 13);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1086, 113);
+            this.panel1.Size = new System.Drawing.Size(1018, 113);
             this.panel1.TabIndex = 0;
             // 
             // label10
@@ -138,7 +134,7 @@
             // cbRes
             // 
             this.cbRes.FormattingEnabled = true;
-            this.cbRes.Location = new System.Drawing.Point(908, 73);
+            this.cbRes.Location = new System.Drawing.Point(871, 63);
             this.cbRes.Name = "cbRes";
             this.cbRes.Size = new System.Drawing.Size(95, 21);
             this.cbRes.TabIndex = 24;
@@ -146,7 +142,7 @@
             // cbCoupling
             // 
             this.cbCoupling.FormattingEnabled = true;
-            this.cbCoupling.Location = new System.Drawing.Point(908, 30);
+            this.cbCoupling.Location = new System.Drawing.Point(871, 30);
             this.cbCoupling.Name = "cbCoupling";
             this.cbCoupling.Size = new System.Drawing.Size(95, 21);
             this.cbCoupling.TabIndex = 23;
@@ -154,23 +150,15 @@
             // cbVoltage
             // 
             this.cbVoltage.FormattingEnabled = true;
-            this.cbVoltage.Location = new System.Drawing.Point(744, 70);
+            this.cbVoltage.Location = new System.Drawing.Point(673, 64);
             this.cbVoltage.Name = "cbVoltage";
             this.cbVoltage.Size = new System.Drawing.Size(95, 21);
             this.cbVoltage.TabIndex = 22;
             // 
-            // cbStreaming
-            // 
-            this.cbStreaming.FormattingEnabled = true;
-            this.cbStreaming.Location = new System.Drawing.Point(744, 30);
-            this.cbStreaming.Name = "cbStreaming";
-            this.cbStreaming.Size = new System.Drawing.Size(95, 21);
-            this.cbStreaming.TabIndex = 21;
-            // 
             // cbChannels
             // 
             this.cbChannels.FormattingEnabled = true;
-            this.cbChannels.Location = new System.Drawing.Point(574, 50);
+            this.cbChannels.Location = new System.Drawing.Point(675, 30);
             this.cbChannels.Name = "cbChannels";
             this.cbChannels.Size = new System.Drawing.Size(95, 21);
             this.cbChannels.TabIndex = 20;
@@ -181,14 +169,14 @@
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(75, 23);
             this.btnStart.TabIndex = 16;
-            this.btnStart.Text = "Start";
+            this.btnStart.Text = "Record";
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(848, 33);
+            this.label8.Location = new System.Drawing.Point(794, 33);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(51, 13);
             this.label8.TabIndex = 8;
@@ -197,25 +185,16 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(681, 73);
+            this.label7.Location = new System.Drawing.Point(601, 68);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(46, 13);
             this.label7.TabIndex = 7;
             this.label7.Text = "Voltage:";
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(681, 33);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(57, 13);
-            this.label6.TabIndex = 6;
-            this.label6.Text = "Streaming:";
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(505, 53);
+            this.label4.Location = new System.Drawing.Point(601, 34);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(54, 13);
             this.label4.TabIndex = 5;
@@ -233,7 +212,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(848, 73);
+            this.label3.Location = new System.Drawing.Point(794, 68);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(60, 13);
             this.label3.TabIndex = 2;
@@ -290,7 +269,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
@@ -299,7 +277,6 @@
         private System.Windows.Forms.ComboBox cbRes;
         private System.Windows.Forms.ComboBox cbCoupling;
         private System.Windows.Forms.ComboBox cbVoltage;
-        private System.Windows.Forms.ComboBox cbStreaming;
         private System.Windows.Forms.ComboBox cbChannels;
         private System.Windows.Forms.TextBox txtSamplingInterval;
         private System.Windows.Forms.Button btnStreaming;

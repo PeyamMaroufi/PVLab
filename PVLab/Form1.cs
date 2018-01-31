@@ -49,7 +49,7 @@ namespace PVLab
             cbRes.DataSource = Enum.GetValues(typeof(Imports.DeviceResolution));
             cbChannels.DataSource = Enum.GetValues(typeof(Imports.Channel));
             cbCoupling.DataSource = Enum.GetValues(typeof(Imports.Coupling));
-            cbStreaming.DataSource = Enum.GetValues(typeof(Imports.streaminType));
+            
         }
         #endregion
 
@@ -167,6 +167,8 @@ namespace PVLab
             return okej;
         }
         #endregion
+
+ 
     }
 
 }
