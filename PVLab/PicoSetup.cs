@@ -65,6 +65,7 @@ namespace PVLab
         public Imports.DeviceResolution resolution { get; set; }
         public uint SampleInterval { get; set; }
         public int SelChannelIndex { get; set; }
+        public int SelRangeIndex { get; set; }
         PinnedArray<short>[] appBuffersPinned;
         int bufferSize = 1024 * 100;
         uint streamingSamples = 60000;
@@ -311,13 +312,13 @@ namespace PVLab
                     // Scale the data with respect to the maximum value.
                     for (int x = 0; x < sampleCount; x++)
                     {
-                        samples[x] = adc_to_mv(maxPinned[0].Target[x], (int)_channelSettings[0].range);
+                        samples[x] = adc_to_mv(maxPinned[0].Target[x], SelRangeIndex);
                     }
 
                     // Make the time to ms
                     for (int i = 0; i < sampleCount; i++)
                     {
-                        sampleTime[i] = (int)(i * SampleInterval);
+                        sampleTime[i] = (int)(i * SampleInterval)/1000000;
                     }
 
 

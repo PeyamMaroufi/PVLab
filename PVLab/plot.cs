@@ -1,4 +1,5 @@
-﻿using OxyPlot;
+﻿
+using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using PicoPinnedArray;
@@ -8,7 +9,7 @@ using System;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
-
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace PVLab
 {
@@ -18,12 +19,11 @@ namespace PVLab
 
         #region private members
         System.Timers.Timer myTimer;
+
         private readonly short _handle;
         int _channelCount = 1;
         private ChannelSettings[] _channelSettings;
-        PlotModel myModel;
-        LinearAxis linearAxis1;
-        LinearAxis linearAxis2;
+
         private Imports.ps5000aBlockReady _callbackDelegate;
 
 
@@ -63,10 +63,19 @@ namespace PVLab
         uint _startIndex;
         public double[] SampleCont;
         public int[] sampleTimeCont;
-        public LineSeries series1;
 
         int numofEl = 0;
         int z = 1;
+
+        // Click Helpers
+        bool run = false;
+
+        // PLOTT VARIABLER
+        public LineSeries series1;
+        public PlotModel myModel;
+        public LinearAxis linearAxis1;
+        public LinearAxis linearAxis2;
+
         #endregion
 
         #region properties
@@ -75,6 +84,7 @@ namespace PVLab
         /// </summary>
         public Imports.Channel SelChannelr { get; set; }
         public Imports.Coupling SelCoupr { get; set; }
+        public int SelRangeIndex { get; set; }
         public Imports.DeviceResolution resolutionr { get; set; }
         public Imports.Range selRange { get; set; }
         public int SelChannelIndexr { get; set; }
@@ -92,6 +102,7 @@ namespace PVLab
         {
             InitializeComponent();
             _handle = handle;
+
             myTimer = new System.Timers.Timer
             {
                 Interval = 1000
@@ -198,6 +209,7 @@ namespace PVLab
             }
         }
 
+
         /// <summary>
         /// Running streaming.
         /// </summary>
@@ -271,7 +283,7 @@ namespace PVLab
 
                     for (uint i = _startIndex; i < (_startIndex + _sampleCount); i++)
                     {
-                        SampleCont[i] = adc_to_mv(appBuffersPinned[0].Target[i], inputRanges[SelChannelIndexr]);
+                        SampleCont[i] = adc_to_mv(appBuffersPinned[0].Target[i], inputRanges[SelRangeIndex]);
                         sampleTimeCont[i] = (int)((i * SampleIntervalr) / 1000000);
 
                     }
@@ -298,7 +310,7 @@ namespace PVLab
          * Second plot is streaming plot. It is a Oxyplot for Winform which requires 
          * less modification than MS chart control
          * In Streaming plot we first create a Model if there isn't already one. In case user 
-         * click on record first and then then streaming there  is already one. checking for null
+         * click on recirst and then then streaming there  is already one. checking for null
          * plot is also required for updating.
          */
 
@@ -308,22 +320,27 @@ namespace PVLab
         /// <param name="range"></param>
         public void Draw(int range)
         {
-            ss = "Recording plot is called." + Environment.NewLine;
-            txtStatus.AppendText(ss);
-            myTimer.Enabled = false;
-            plotView1.Dock = DockStyle.Fill;
             myModel = new PlotModel { Title = "Voltage level" };
             linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom, Title = "Time in nanosec" };
             linearAxis2 = new LinearAxis { Position = AxisPosition.Left, Title = "Voltage" };
             myModel.Axes.Add(linearAxis1);
             myModel.Axes.Add(linearAxis2);
 
+            myModel.Series.Add(series1);
+
+            ss = "Recording plot is called." + Environment.NewLine;
+            txtStatus.AppendText(ss);
+            myTimer.Enabled = false;
+            plotView1.Dock = DockStyle.Fill;
+
             for (int i = 0; i < Samples.Length; i++)
             {
                 series1.Points.Add(new OxyPlot.DataPoint(SampleTime[i], Samples[i]));
             }
 
-            myModel.Series.Add(series1);
+            if (series1.Points.Count > 0)
+                series1.Points.Clear();
+
             plotView1.Model = myModel;
             ss = "Recording plot is  succesfully created." + Environment.NewLine;
             txtStatus.AppendText(ss);
@@ -335,11 +352,13 @@ namespace PVLab
         /// </summary>
         public void StreamingPlot()
         {
+
             ss = "New streaming plot is starting" + Environment.NewLine;
-            
-            myModel = new PlotModel { Title = "Voltage" };
-            linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom };
-            linearAxis2 = new LinearAxis { Position = AxisPosition.Left };
+
+
+            myModel = new PlotModel { Title = "Voltage level" };
+            linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom, Title = "Time in nanosec" };
+            linearAxis2 = new LinearAxis { Position = AxisPosition.Left, Title = "Voltage" };
             myModel.Axes.Add(linearAxis1);
             myModel.Axes.Add(linearAxis2);
 
@@ -347,50 +366,60 @@ namespace PVLab
             for (int i = 0; i < SampleCont.Length; i++)
             {
                 series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
+
             }
 
+            if (series1.Points.Count > 0)
+                series1.Points.Clear();
+
             myModel.Series.Add(series1);
-            plotView1.Dock = DockStyle.None;
             plotView1.Model = myModel;
-            ss = "New streaming plot is created succesfuly" + Environment.NewLine;
-            
+
+            if (txtStatus.InvokeRequired)
+            {
+                txtStatus.Invoke((MethodInvoker)delegate ()
+                {
+
+                    txtStatus.AppendText(ss);
+                });
+
+            }
+            plotView1.InvalidatePlot(true);
+
         }
 
+
+
         /// <summary>
-        /// Updating the chart. Invoke is required for not blocking UI thread
+        /// Updating the chart.Invoke is required for not blocking UI thread
         /// since we use a timer we do calculations and reading in a other thread
-        /// than UI thread. and for getting back those values and show them on UI
+        /// than UI thread.and for getting back those values and show them on UI
         /// thread invoking is required.
         /// </summary>
         public void UpdatePlot()
         {
-
-            if (plotView1.InvokeRequired)
+            
+            if (plotView1.InvokeRequired )
             {
-                plotView1.Invoke((MethodInvoker)delegate ()
-                {
-                    series1.Points.Clear();
-                    lbPoints.Text = series1.Points.Count.ToString();
-                    for (int i = 0; i < SampleCont.Length; i++)
-                    {
-                        series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
-                    }
-                    //myModel.Series.Add(series1);
-                    plotView1.InvalidatePlot(true);
-                });
+                plotView1.Invoke((MethodInvoker)UpdatePlot);
+                //lbPoints.Invoke((MethodInvoker)UpdatePlot);
 
             }
             else
             {
+                plotView1.InvalidatePlot(true);
                 series1.Points.Clear();
-
+                string num = series1.Points.Count.ToString();
                 lbPoints.Text = series1.Points.Count.ToString();
+
                 for (int i = 0; i < SampleCont.Length; i++)
                 {
                     series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
                 }
-                //myModel.Series.Add(series1);
-                plotView1.InvalidatePlot(true);
+                
+               
+
+
             }
         }
         #endregion
@@ -406,6 +435,7 @@ namespace PVLab
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             ss = "Timer elapsed" + Environment.NewLine;
+
             if (txtStatus.InvokeRequired)
             {
                 txtStatus.Invoke((MethodInvoker)delegate ()
@@ -415,16 +445,14 @@ namespace PVLab
 
             }
 
-            
             if (myModel == null)
             {
                 StreamingPlot();
-                Thread.Sleep(500);
+                
             }
             else
             {
                 UpdatePlot();
-                Thread.Sleep(500);
 
             }
 
@@ -446,28 +474,34 @@ namespace PVLab
             ss = "Start Streaming button is clicked" + Environment.NewLine;
             txtStatus.AppendText(ss);
 
-            if (thread == null)
+            if (!run)
             {
                 ss = "Thread was null and therefor gets created" + Environment.NewLine;
                 txtStatus.AppendText(ss);
                 thread = new Thread(new ThreadStart(RunStreaming));
                 thread.Start();
                 btnStream.Text = "Stop Streaming";
-
+                myTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
+                myTimer.Enabled = true;
+                ss = "Timer Started" + Environment.NewLine;
+                txtStatus.AppendText(ss);
+                run = true;
             }
             else
             {
                 ss = "Aborting thread. A temporary solution" + Environment.NewLine;
                 txtStatus.AppendText(ss);
-                thread.Abort();
+                ss = "Timer Stopped" + Environment.NewLine;
+                Imports.CloseUnit(_handle);
+                btnStream.Text = "Start steaming";
                 thread = null;
+                if (myTimer.Enabled == true)
+                    myTimer.Enabled = false;
+
+                run = false;
 
             }
 
-            myTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
-            myTimer.Enabled = true;
-            ss = "Timer Started" + Environment.NewLine;
-            txtStatus.AppendText(ss);
         }
 
 
@@ -500,6 +534,18 @@ namespace PVLab
             if (thread != null)
                 MessageBox.Show("Close streaming before choosing trigger!");
         }
+        #endregion
+
+
+        #region Triggers
+        /// <summary>
+        /// Repeat algorithm
+        /// </summary>
+        private void repeatTrigger()
+        {
+
+        }
+
         #endregion
     }
 

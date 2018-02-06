@@ -90,6 +90,7 @@ namespace PVLab
                     SelCoup = (Imports.Coupling)cbCoupling.SelectedIndex,
                     SelVolt = (Imports.Range)cbVoltage.SelectedIndex,
                     SelChannelIndex = cbChannels.SelectedIndex,
+                    SelRangeIndex = cbVoltage.SelectedIndex,
                     SampleInterval = uint.Parse(txtSamplingInterval.Text),
                     resolution = (Imports.DeviceResolution)cbRes.SelectedIndex,
                 };
