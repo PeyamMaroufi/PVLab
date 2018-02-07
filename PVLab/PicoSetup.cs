@@ -52,7 +52,7 @@ namespace PVLab
         private int _channelCount;
         private int _digitalPorts;
         private Imports.ps5000aBlockReady _callbackDelegate;
-        int[] samples;
+        double[] samples;
         int[] time;
         short _maxValue;
         int[] minValue;
@@ -251,9 +251,9 @@ namespace PVLab
              *		 the most suitable time units, and the maximum _oversample at the current _timebase*/
             int timeInterval;
             int maxSamples;
-
+            double sampleRedo = (double)(SampleInterval * Math.Pow(10, -9));
             // Over own _timebase. This will slow the operation but should work
-            _timebase = (uint)(125000000 * SampleInterval * Math.Pow(10, -9)) + 2;
+            _timebase = (uint)(125000000 * sampleRedo + 2);
             while (Imports.GetTimebase(_handle, _timebase, (int)sampleCount, out timeInterval, out maxSamples, 0) != 0)
             {
                 // This will try to come to our chosen timebase as close as possible.
@@ -303,7 +303,7 @@ namespace PVLab
                 status = Imports.GetValues(_handle, 0, ref sampleCount, 1, Imports.DownSamplingMode.None, 0, out overflow);
                 minPinned[0] = new PinnedArray<short>(minBuffers);
                 maxPinned[0] = new PinnedArray<short>(maxBuffers);
-                samples = new int[sampleCount];
+                samples = new double[sampleCount];
                 sampleTime = new int[sampleCount];
 
                 if (status == (short)StatusCodes.PICO_OK)
@@ -415,9 +415,9 @@ namespace PVLab
         /// <summary>
         ///  Calls Plot form and passes data to it to make a graph
         /// </summary>
-        void DrawingChart(int[] data, int[] time)
+        void DrawingChart(double[] data, int[] time)
         {
-            int[] samples = data;
+            double[] samples = data;
             int[] sampleTime = time;
             Plot plot = new Plot(_handle);
             plot.Show();

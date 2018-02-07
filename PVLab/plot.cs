@@ -30,7 +30,7 @@ namespace PVLab
         Thread thread;
         uint _timebase;
         public static string ss;
-        public int[] Samples { get; set; }
+        public double[] Samples { get; set; }
         public int[] SampleTime { get; set; }
 
         public int[] samplesTrigger;
@@ -75,6 +75,9 @@ namespace PVLab
         public PlotModel myModel;
         public LinearAxis linearAxis1;
         public LinearAxis linearAxis2;
+        //System.Windows.Forms.DataVisualization.Charting.Series series;
+
+        public bool sendit = false;
 
         #endregion
 
@@ -105,31 +108,34 @@ namespace PVLab
 
             myTimer = new System.Timers.Timer
             {
-                Interval = 1000
+                Interval = 100
             };
 
             SetupEverythingUI();
+
         }
 
         public void SetupEverythingUI()
         {
 
 
-            series1 = new LineSeries
-            {
-                MarkerType = MarkerType.Circle,
-                StrokeThickness = 1,
-                MarkerSize = 1,
-                Smooth = true,
-                Title = "Voltage level"
-
-
-            };
             ss = "Plot form is created . Construction is called" + Environment.NewLine;
-            txtStatus.AppendText(ss);
+            InsertText(ss);
             cbDirection.DataSource = Enum.GetValues(typeof(Imports.ThresholdDirection));
 
         }
+
+        private void InsertText(string ss)
+        {
+            if (txtStatus.InvokeRequired)
+            {
+                txtStatus.Invoke((MethodInvoker)delegate ()
+                {
+                    txtStatus.AppendText(ss);
+                });
+            }
+        }
+
         #endregion
 
         #region Methods required for streaming
@@ -150,7 +156,7 @@ namespace PVLab
             uint status;
             status = Imports.MaximumValue(_handle, out _maxValue); // Set max. ADC Counts
             ss = ("Max value for current resolution founded" + _maxValue.ToString()) + Environment.NewLine;
-            txtStatus.AppendText(ss);
+            InsertText(ss);
         }
 
         /// <summary>
@@ -161,7 +167,7 @@ namespace PVLab
             uint status;
             status = Imports.SetChannel(_handle, SelChannelr, 1, SelCoupr, selRange, 0);
             ss = ("Set channel is done") + Environment.NewLine;
-            txtStatus.AppendText(ss);
+            InsertText(ss);
         }
 
 
@@ -265,6 +271,8 @@ namespace PVLab
                 status = Imports.GetStreamingLatestValues(_handle, StreamingCallback, IntPtr.Zero);
 
 
+                //myTimer.Enabled = true;
+
                 if (_ready && _sampleCount > 0) /* can be ready and have no data, if autoStop has fired */
                 {
                     //myTimer.Enabled = true;
@@ -320,17 +328,30 @@ namespace PVLab
         /// <param name="range"></param>
         public void Draw(int range)
         {
+
+
+
             myModel = new PlotModel { Title = "Voltage level" };
             linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom, Title = "Time in nanosec" };
             linearAxis2 = new LinearAxis { Position = AxisPosition.Left, Title = "Voltage" };
             myModel.Axes.Add(linearAxis1);
             myModel.Axes.Add(linearAxis2);
 
-            myModel.Series.Add(series1);
+            series1 = new LineSeries
+            {
+                MarkerType = MarkerType.Circle,
+                StrokeThickness = 1,
+                MarkerSize = 1,
+                Smooth = true,
+                Title = "Voltage level"
+
+
+            };
+
 
             ss = "Recording plot is called." + Environment.NewLine;
             txtStatus.AppendText(ss);
-            myTimer.Enabled = false;
+            myTimer.Enabled = true;
             plotView1.Dock = DockStyle.Fill;
 
             for (int i = 0; i < Samples.Length; i++)
@@ -338,9 +359,8 @@ namespace PVLab
                 series1.Points.Add(new OxyPlot.DataPoint(SampleTime[i], Samples[i]));
             }
 
-            if (series1.Points.Count > 0)
-                series1.Points.Clear();
-
+           
+            myModel.Series.Add(series1);
             plotView1.Model = myModel;
             ss = "Recording plot is  succesfully created." + Environment.NewLine;
             txtStatus.AppendText(ss);
@@ -348,47 +368,39 @@ namespace PVLab
 
 
         /// <summary>
-        /// Streaming plot.
+        /// Streaming plot
         /// </summary>
-        public void StreamingPlot()
+        private void InitiateStreamPlot()
         {
-
+            myModel = new PlotModel { Title = "Voltage level" };
             ss = "New streaming plot is starting" + Environment.NewLine;
 
+            series1 = new LineSeries
+            {
+                MarkerType = MarkerType.Circle,
+                StrokeThickness = 1,
+                MarkerSize = 1,
+                Smooth = true,
+                Title = "Voltage level"
 
-            myModel = new PlotModel { Title = "Voltage level" };
+
+            };
+
             linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom, Title = "Time in nanosec" };
             linearAxis2 = new LinearAxis { Position = AxisPosition.Left, Title = "Voltage" };
+
             myModel.Axes.Add(linearAxis1);
             myModel.Axes.Add(linearAxis2);
-
 
             for (int i = 0; i < SampleCont.Length; i++)
             {
                 series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
-
             }
-
-            if (series1.Points.Count > 0)
-                series1.Points.Clear();
 
             myModel.Series.Add(series1);
             plotView1.Model = myModel;
-
-            if (txtStatus.InvokeRequired)
-            {
-                txtStatus.Invoke((MethodInvoker)delegate ()
-                {
-
-                    txtStatus.AppendText(ss);
-                });
-
-            }
-            plotView1.InvalidatePlot(true);
-
+            sendit = true;
         }
-
-
 
         /// <summary>
         /// Updating the chart.Invoke is required for not blocking UI thread
@@ -398,8 +410,8 @@ namespace PVLab
         /// </summary>
         public void UpdatePlot()
         {
-            
-            if (plotView1.InvokeRequired )
+
+            if (plotView1.InvokeRequired)
             {
                 plotView1.Invoke((MethodInvoker)UpdatePlot);
                 //lbPoints.Invoke((MethodInvoker)UpdatePlot);
@@ -407,8 +419,12 @@ namespace PVLab
             }
             else
             {
-                plotView1.InvalidatePlot(true);
-                series1.Points.Clear();
+                if (series1.Points.Count > 0)
+                    series1.Points.Clear();
+
+                if (myModel.Series.Count > 0)
+                    myModel.Series.Clear();
+
                 string num = series1.Points.Count.ToString();
                 lbPoints.Text = series1.Points.Count.ToString();
 
@@ -416,8 +432,10 @@ namespace PVLab
                 {
                     series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
                 }
-                
-               
+                myModel.Series.Add(series1);
+                plotView1.InvalidatePlot(true);
+
+
 
 
             }
@@ -436,29 +454,21 @@ namespace PVLab
         {
             ss = "Timer elapsed" + Environment.NewLine;
 
-            if (txtStatus.InvokeRequired)
-            {
-                txtStatus.Invoke((MethodInvoker)delegate ()
-                {
-                    txtStatus.AppendText(ss);
-                });
+            InsertText(ss);
 
-            }
-
-            if (myModel == null)
+            if (!sendit)
             {
-                StreamingPlot();
-                
+                InitiateStreamPlot();
             }
             else
             {
-                UpdatePlot();
 
+                UpdatePlot();
             }
 
-            myTimer.Start();
 
         }
+
 
         #endregion
 
@@ -472,32 +482,32 @@ namespace PVLab
         private void btnStream_Click(object sender, EventArgs e)
         {
             ss = "Start Streaming button is clicked" + Environment.NewLine;
-            txtStatus.AppendText(ss);
+            InsertText(ss);
 
             if (!run)
             {
                 ss = "Thread was null and therefor gets created" + Environment.NewLine;
-                txtStatus.AppendText(ss);
+                InsertText(ss);
                 thread = new Thread(new ThreadStart(RunStreaming));
                 thread.Start();
                 btnStream.Text = "Stop Streaming";
-                myTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
+                myTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
                 myTimer.Enabled = true;
                 ss = "Timer Started" + Environment.NewLine;
-                txtStatus.AppendText(ss);
+                InsertText(ss);
                 run = true;
             }
             else
             {
                 ss = "Aborting thread. A temporary solution" + Environment.NewLine;
-                txtStatus.AppendText(ss);
+                InsertText(ss);
                 ss = "Timer Stopped" + Environment.NewLine;
                 Imports.CloseUnit(_handle);
                 btnStream.Text = "Start steaming";
                 thread = null;
                 if (myTimer.Enabled == true)
                     myTimer.Enabled = false;
-
+                InsertText(ss);
                 run = false;
 
             }
