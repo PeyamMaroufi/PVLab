@@ -6,6 +6,7 @@ using PicoPinnedArray;
 using PicoStatus;
 using PS5000AImports;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
@@ -62,7 +63,7 @@ namespace PVLab
         uint _trigAt = 0;
         uint _startIndex;
         public double[] SampleCont;
-        public int[] sampleTimeCont;
+        public double[] sampleTimeCont;
 
         int numofEl = 0;
         int z = 1;
@@ -79,6 +80,10 @@ namespace PVLab
 
         public bool sendit = false;
 
+        // Make a list to remember sampleCounts
+        public List<int> sampleCountList;
+        List<double> updateTimeList;
+        List<double> UpdatedSampleList;
         #endregion
 
         #region properties
@@ -108,7 +113,7 @@ namespace PVLab
 
             myTimer = new System.Timers.Timer
             {
-                Interval = 100
+                Interval = 500
             };
 
             SetupEverythingUI();
@@ -122,7 +127,9 @@ namespace PVLab
             ss = "Plot form is created . Construction is called" + Environment.NewLine;
             InsertText(ss);
             cbDirection.DataSource = Enum.GetValues(typeof(Imports.ThresholdDirection));
-
+            sampleCountList = new List<int>();
+            updateTimeList = new List<double>();
+            UpdatedSampleList = new List<double>();
         }
 
         private void InsertText(string ss)
@@ -155,7 +162,7 @@ namespace PVLab
         {
             uint status;
             status = Imports.MaximumValue(_handle, out _maxValue); // Set max. ADC Counts
-            ss = ("Max value for current resolution founded" + _maxValue.ToString()) + Environment.NewLine;
+            ss = ("Max value for current resolution founded " + _maxValue.ToString()) + Environment.NewLine;
             InsertText(ss);
         }
 
@@ -166,7 +173,7 @@ namespace PVLab
         {
             uint status;
             status = Imports.SetChannel(_handle, SelChannelr, 1, SelCoupr, selRange, 0);
-            ss = ("Set channel is done") + Environment.NewLine;
+            ss = ("Set channel is done") + SelChannelr.ToString() + " Coupling  " + SelCoupr.ToString() + " Range " + selRange.ToString() + Environment.NewLine;
             InsertText(ss);
         }
 
@@ -242,6 +249,7 @@ namespace PVLab
             uint sampleInterval = SampleIntervalr;
             uint status;
 
+
             // Use Pinned Arrays for the application buffers
             PinnedArray<short>[] appBuffersPinned = new PinnedArray<short>[_channelCount * 2];
 
@@ -261,7 +269,7 @@ namespace PVLab
             _autoStop = false;
             status = Imports.RunStreaming(_handle, ref sampleInterval, Imports.ReportedTimeUnits.NanoSeconds, preTrigger, 1000000 - preTrigger, 1, 1, Imports.RatioMode.None, (uint)sampleCount);
             SampleCont = new double[appBuffersPinned[0].Target.Length];
-            sampleTimeCont = new int[appBuffersPinned[0].Target.Length];
+            sampleTimeCont = new double[appBuffersPinned[0].Target.Length];
 
             while (!_autoStop)
             {
@@ -283,7 +291,7 @@ namespace PVLab
                     }
 
                     totalSamples += _sampleCount;
-
+                    sampleCountList.Add(_sampleCount);
                     if (_trig > 0)
                     {
 
@@ -292,13 +300,16 @@ namespace PVLab
                     for (uint i = _startIndex; i < (_startIndex + _sampleCount); i++)
                     {
                         SampleCont[i] = adc_to_mv(appBuffersPinned[0].Target[i], inputRanges[SelRangeIndex]);
-                        sampleTimeCont[i] = (int)((i * SampleIntervalr) / 1000000);
+                        double power = SampleIntervalr * Math.Pow(10, -9);
+                        sampleTimeCont[i] = (double)(i * power);
 
                     }
+
 
                 }
             }
         }
+
 
 
         /// <summary>
@@ -314,13 +325,14 @@ namespace PVLab
         #endregion
 
         #region Plotting
+
         /* Using two plots, one for recording where only plot is showing.
-         * Second plot is streaming plot. It is a Oxyplot for Winform which requires 
-         * less modification than MS chart control
-         * In Streaming plot we first create a Model if there isn't already one. In case user 
-         * click on recirst and then then streaming there  is already one. checking for null
-         * plot is also required for updating.
-         */
+        * Second plot is streaming plot. It is a Oxyplot for Winform which requires 
+        * less modification than MS chart control
+        * In Streaming plot we first create a Model if there isn't already one. In case user 
+        * click on recirst and then then streaming there  is already one. checking for null
+        * plot is also required for updating.
+        */
 
         /// <summary>
         /// Draw method for record plot
@@ -328,9 +340,6 @@ namespace PVLab
         /// <param name="range"></param>
         public void Draw(int range)
         {
-
-
-
             myModel = new PlotModel { Title = "Voltage level" };
             linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom, Title = "Time in nanosec" };
             linearAxis2 = new LinearAxis { Position = AxisPosition.Left, Title = "Voltage" };
@@ -351,7 +360,7 @@ namespace PVLab
 
             ss = "Recording plot is called." + Environment.NewLine;
             txtStatus.AppendText(ss);
-            myTimer.Enabled = true;
+            //myTimer.Enabled = true;
             plotView1.Dock = DockStyle.Fill;
 
             for (int i = 0; i < Samples.Length; i++)
@@ -359,7 +368,7 @@ namespace PVLab
                 series1.Points.Add(new OxyPlot.DataPoint(SampleTime[i], Samples[i]));
             }
 
-           
+
             myModel.Series.Add(series1);
             plotView1.Model = myModel;
             ss = "Recording plot is  succesfully created." + Environment.NewLine;
@@ -381,8 +390,8 @@ namespace PVLab
                 StrokeThickness = 1,
                 MarkerSize = 1,
                 Smooth = true,
-                Title = "Voltage level"
-
+                Title = "Voltage level",
+                CanTrackerInterpolatePoints = false,
 
             };
 
@@ -419,37 +428,59 @@ namespace PVLab
             }
             else
             {
+                //while (series1.Points.Count > 0)
+                //{
+
+                //}
+                if (sampleCountList.Count > 1)
+                {
+                    if (updateTimeList.Count > 0)
+                    {
+                        updateTimeList.Clear();
+                    }
+
+                    for (int i = sampleCountList[sampleCountList.Count - 2]; i < sampleCountList[sampleCountList.Count - 1]; i++)
+                    {
+                        updateTimeList.Add(sampleTimeCont[i] - sampleTimeCont[sampleCountList[sampleCountList.Count - 2]]);
+                        UpdatedSampleList.Add(SampleCont[i]);
+
+                    }
+
+                }
                 if (series1.Points.Count > 0)
                     series1.Points.Clear();
 
                 if (myModel.Series.Count > 0)
                     myModel.Series.Clear();
 
+
                 string num = series1.Points.Count.ToString();
                 lbPoints.Text = series1.Points.Count.ToString();
+                //myModel.Series.Add(series1);
 
                 for (int i = 0; i < SampleCont.Length; i++)
                 {
                     series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
                 }
-                myModel.Series.Add(series1);
-                plotView1.InvalidatePlot(true);
 
+                myModel.Series.Add(series1);
+
+                //plotView1.Refresh();
+                plotView1.InvalidatePlot(true);
 
 
 
             }
         }
         #endregion
-
         #region Timer method
         /// <summary>
-        /// checking for myModel. to choose between updating and creating.
+        /// checking for myModel.to choose between updating and creating.
         /// reason for this check is first time the mymodel is running it needs
-        /// to be created. second time and after we use the same model.
+        /// to be created.second time and after we use the same model.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name = "sender" ></ param >
+        /// < param name= "e" ></ param >
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             ss = "Timer elapsed" + Environment.NewLine;
@@ -459,6 +490,8 @@ namespace PVLab
             if (!sendit)
             {
                 InitiateStreamPlot();
+                //SampleCont = null;
+                //sampleTimeCont = null;
             }
             else
             {
