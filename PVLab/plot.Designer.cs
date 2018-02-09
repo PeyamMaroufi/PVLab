@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtTriggerAT = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbDirection = new System.Windows.Forms.ComboBox();
             this.lbPoints = new System.Windows.Forms.Label();
@@ -48,6 +50,8 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.txtTriggerAT);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.cbDirection);
             this.groupBox1.Controls.Add(this.lbPoints);
@@ -64,10 +68,26 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Control";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(620, 38);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(52, 13);
+            this.label3.TabIndex = 35;
+            this.label3.Text = "Triger at: ";
+            // 
+            // txtTriggerAT
+            // 
+            this.txtTriggerAT.Location = new System.Drawing.Point(676, 34);
+            this.txtTriggerAT.Name = "txtTriggerAT";
+            this.txtTriggerAT.Size = new System.Drawing.Size(100, 20);
+            this.txtTriggerAT.TabIndex = 34;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(757, 39);
+            this.label1.Location = new System.Drawing.Point(821, 38);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(55, 13);
             this.label1.TabIndex = 33;
@@ -76,15 +96,15 @@
             // cbDirection
             // 
             this.cbDirection.FormattingEnabled = true;
-            this.cbDirection.Location = new System.Drawing.Point(821, 35);
+            this.cbDirection.Location = new System.Drawing.Point(894, 34);
             this.cbDirection.Name = "cbDirection";
-            this.cbDirection.Size = new System.Drawing.Size(171, 21);
+            this.cbDirection.Size = new System.Drawing.Size(98, 21);
             this.cbDirection.TabIndex = 32;
             // 
             // lbPoints
             // 
             this.lbPoints.AutoSize = true;
-            this.lbPoints.Location = new System.Drawing.Point(81, 37);
+            this.lbPoints.Location = new System.Drawing.Point(81, 38);
             this.lbPoints.Name = "lbPoints";
             this.lbPoints.Size = new System.Drawing.Size(0, 13);
             this.lbPoints.TabIndex = 31;
@@ -92,7 +112,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(36, 39);
+            this.label2.Location = new System.Drawing.Point(36, 38);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 30;
@@ -100,9 +120,9 @@
             // 
             // btnStream
             // 
-            this.btnStream.Location = new System.Drawing.Point(562, 33);
+            this.btnStream.Location = new System.Drawing.Point(115, 34);
             this.btnStream.Name = "btnStream";
-            this.btnStream.Size = new System.Drawing.Size(121, 21);
+            this.btnStream.Size = new System.Drawing.Size(121, 20);
             this.btnStream.TabIndex = 27;
             this.btnStream.Text = "Start";
             this.btnStream.UseVisualStyleBackColor = true;
@@ -111,7 +131,7 @@
             // rbSingle
             // 
             this.rbSingle.AutoSize = true;
-            this.rbSingle.Location = new System.Drawing.Point(412, 37);
+            this.rbSingle.Location = new System.Drawing.Point(511, 36);
             this.rbSingle.Name = "rbSingle";
             this.rbSingle.Size = new System.Drawing.Size(54, 17);
             this.rbSingle.TabIndex = 25;
@@ -123,7 +143,7 @@
             // rbAuto
             // 
             this.rbAuto.AutoSize = true;
-            this.rbAuto.Location = new System.Drawing.Point(343, 35);
+            this.rbAuto.Location = new System.Drawing.Point(442, 36);
             this.rbAuto.Name = "rbAuto";
             this.rbAuto.Size = new System.Drawing.Size(47, 17);
             this.rbAuto.TabIndex = 24;
@@ -135,7 +155,7 @@
             // rbRepeat
             // 
             this.rbRepeat.AutoSize = true;
-            this.rbRepeat.Location = new System.Drawing.Point(184, 35);
+            this.rbRepeat.Location = new System.Drawing.Point(283, 36);
             this.rbRepeat.Name = "rbRepeat";
             this.rbRepeat.Size = new System.Drawing.Size(60, 17);
             this.rbRepeat.TabIndex = 23;
@@ -147,7 +167,7 @@
             // rbNone
             // 
             this.rbNone.AutoSize = true;
-            this.rbNone.Location = new System.Drawing.Point(268, 35);
+            this.rbNone.Location = new System.Drawing.Point(367, 36);
             this.rbNone.Name = "rbNone";
             this.rbNone.Size = new System.Drawing.Size(51, 17);
             this.rbNone.TabIndex = 22;
@@ -206,5 +226,7 @@
         private System.Windows.Forms.ComboBox cbDirection;
         private System.Windows.Forms.Label label1;
         private OxyPlot.WindowsForms.PlotView plotView1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtTriggerAT;
     }
 }

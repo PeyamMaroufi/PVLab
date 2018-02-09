@@ -4,6 +4,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using PicoPinnedArray;
 using PicoStatus;
+using System.Drawing;
 using PS5000AImports;
 using System;
 using System.Collections.Generic;
@@ -76,9 +77,10 @@ namespace PVLab
         public PlotModel myModel;
         public LinearAxis linearAxis1;
         public LinearAxis linearAxis2;
-        //System.Windows.Forms.DataVisualization.Charting.Series series;
-
         public bool sendit = false;
+
+        // Trigger at 
+        double triggerAtNumber;
 
         // Make a list to remember sampleCounts
         public List<int> sampleCountList;
@@ -126,7 +128,10 @@ namespace PVLab
 
             ss = "Plot form is created . Construction is called" + Environment.NewLine;
             InsertText(ss);
-            cbDirection.DataSource = Enum.GetValues(typeof(Imports.ThresholdDirection));
+
+            cbDirection.Items.Add("Rising");
+            cbDirection.Items.Add("Falling");
+
             sampleCountList = new List<int>();
             updateTimeList = new List<double>();
             UpdatedSampleList = new List<double>();
@@ -406,8 +411,6 @@ namespace PVLab
             myModel.Axes.Add(linearAxis1);
             myModel.Axes.Add(linearAxis2);
 
-
-
             for (int i = 0; i < updateTimeList.Count - 1; i++)
             {
                 series1.Points.Add(new OxyPlot.DataPoint(updateTimeList[i], UpdatedSampleList[i]));
@@ -465,6 +468,7 @@ namespace PVLab
             }
         }
         #endregion
+
         #region Timer method
         /// <summary>
         /// checking for myModel.to choose between updating and creating.
@@ -514,16 +518,46 @@ namespace PVLab
 
         #region UI event
         /// <summary>
-        /// Click event. moving calculation and reading samples to an other thread
-        /// to avoid freezing and getting more performance.
+        /// Checks if some of triggers are checked then calls streaming 
+        /// method.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnStream_Click(object sender, EventArgs e)
         {
+            int a = cbDirection.SelectedIndex;
             ss = "Start Streaming button is clicked" + Environment.NewLine;
             InsertText(ss);
 
+            if (rbRepeat.Checked)
+            {
+                ValidateTheTextBox();
+                RunStreamClick();
+                RepeatTrigger(a);
+            }
+            else if (rbSingle.Checked)
+            {
+                ValidateTheTextBox();
+                RunStreamClick();
+                SingleTrigger();
+            }
+            else if (rbAuto.Checked)
+            {
+                ValidateTheTextBox();
+                RunStreamClick();
+                AutoTrigger();
+
+            }
+            else
+            {
+
+            }
+
+
+        }
+
+        private void RunStreamClick()
+        {
             if (!run)
             {
                 ss = "Thread was null and therefor gets created" + Environment.NewLine;
@@ -551,7 +585,16 @@ namespace PVLab
                 run = false;
 
             }
+        }
 
+        private void AutoTrigger()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SingleTrigger()
+        {
+            throw new NotImplementedException();
         }
 
 
@@ -584,6 +627,17 @@ namespace PVLab
             if (thread != null)
                 MessageBox.Show("Close streaming before choosing trigger!");
         }
+
+        private void ValidateTheTextBox()
+        {
+            bool valid;
+            var control2 = double.TryParse(txtTriggerAT.Text, out triggerAtNumber);
+            if (string.IsNullOrWhiteSpace(txtTriggerAT.Text) || control2 != false)
+            {
+                triggerAtNumber = 0;
+                txtStatus.AppendText("No trigger set or not possible to parse to double. Sets the trigger at 0" + Environment.NewLine);
+            }
+        }
         #endregion
 
 
@@ -591,8 +645,9 @@ namespace PVLab
         /// <summary>
         /// Repeat algorithm
         /// </summary>
-        private void repeatTrigger()
+        private void RepeatTrigger(int a)
         {
+            var value = UpdatedSampleList.FindIndex(item => item == triggerAtNumber);
 
         }
 
