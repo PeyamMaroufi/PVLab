@@ -268,8 +268,8 @@ namespace PVLab
             }
             _autoStop = false;
             status = Imports.RunStreaming(_handle, ref sampleInterval, Imports.ReportedTimeUnits.NanoSeconds, preTrigger, 1000000 - preTrigger, 1, 1, Imports.RatioMode.None, (uint)sampleCount);
-            SampleCont = new double[appBuffersPinned[0].Target.Length];
-            sampleTimeCont = new double[appBuffersPinned[0].Target.Length];
+            //SampleCont = new double[appBuffersPinned[0].Target.Length];
+            //sampleTimeCont = new double[appBuffersPinned[0].Target.Length];
 
             while (!_autoStop)
             {
@@ -284,6 +284,11 @@ namespace PVLab
                 if (_ready && _sampleCount > 0) /* can be ready and have no data, if autoStop has fired */
                 {
                     //myTimer.Enabled = true;
+                    if (updateTimeList.Count > 0)
+                    {
+                        updateTimeList.Clear();
+                        UpdatedSampleList.Clear();
+                    }
 
                     if (_trig > 0)
                     {
@@ -299,9 +304,9 @@ namespace PVLab
 
                     for (uint i = _startIndex; i < (_startIndex + _sampleCount); i++)
                     {
-                        SampleCont[i] = adc_to_mv(appBuffersPinned[0].Target[i], inputRanges[SelRangeIndex]);
+                        UpdatedSampleList.Add(adc_to_mv(appBuffersPinned[0].Target[i], inputRanges[SelRangeIndex]));
                         double power = SampleIntervalr * Math.Pow(10, -9);
-                        sampleTimeCont[i] = (double)(i * power);
+                        updateTimeList.Add((double)(i * power));
 
                     }
 
@@ -401,9 +406,11 @@ namespace PVLab
             myModel.Axes.Add(linearAxis1);
             myModel.Axes.Add(linearAxis2);
 
-            for (int i = 0; i < SampleCont.Length; i++)
+
+
+            for (int i = 0; i < updateTimeList.Count - 1; i++)
             {
-                series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
+                series1.Points.Add(new OxyPlot.DataPoint(updateTimeList[i], UpdatedSampleList[i]));
             }
 
             myModel.Series.Add(series1);
@@ -428,39 +435,24 @@ namespace PVLab
             }
             else
             {
-                //while (series1.Points.Count > 0)
-                //{
 
-                //}
-                if (sampleCountList.Count > 1)
-                {
-                    if (updateTimeList.Count > 0)
-                    {
-                        updateTimeList.Clear();
-                    }
 
-                    for (int i = sampleCountList[sampleCountList.Count - 2]; i < sampleCountList[sampleCountList.Count - 1]; i++)
-                    {
-                        updateTimeList.Add(sampleTimeCont[i] - sampleTimeCont[sampleCountList[sampleCountList.Count - 2]]);
-                        UpdatedSampleList.Add(SampleCont[i]);
-
-                    }
-
-                }
                 if (series1.Points.Count > 0)
                     series1.Points.Clear();
 
                 if (myModel.Series.Count > 0)
                     myModel.Series.Clear();
 
+                double[] time = updateTimeList.ToArray();
+                double[] sample = UpdatedSampleList.ToArray();
 
                 string num = series1.Points.Count.ToString();
                 lbPoints.Text = series1.Points.Count.ToString();
                 //myModel.Series.Add(series1);
 
-                for (int i = 0; i < SampleCont.Length; i++)
+                for (int i = 0; i < time.Length; i++)
                 {
-                    series1.Points.Add(new OxyPlot.DataPoint(sampleTimeCont[i], SampleCont[i]));
+                    series1.Points.Add(new OxyPlot.DataPoint(time[i], sample[i]));
                 }
 
                 myModel.Series.Add(series1);
@@ -495,7 +487,22 @@ namespace PVLab
             }
             else
             {
+                //if (sampleCountList.Count > 1)
+                //{
+                //    if (updateTimeList.Count > 0)
+                //    {
+                //        updateTimeList.Clear();
+                //        UpdatedSampleList.Clear();
+                //    }
 
+                //    for (int i =0; i < sampleCountList[sampleCountList.Count - 1]; i++)
+                //    {
+                //        updateTimeList.Add(sampleTimeCont[i]);
+                //        UpdatedSampleList.Add(SampleCont[i]);
+
+                //    }
+
+                //}
                 UpdatePlot();
             }
 
