@@ -1,20 +1,7 @@
-﻿using LiveCharts;
-using PicoPinnedArray;
-using PicoStatus;
-using PS5000AImports;
+﻿using PS5000AImports;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Media;
-using LiveCharts.Wpf;
-using LiveCharts.WinForms;
+
 
 
 namespace PVLab
@@ -49,7 +36,7 @@ namespace PVLab
             cbRes.DataSource = Enum.GetValues(typeof(Imports.DeviceResolution));
             cbChannels.DataSource = Enum.GetValues(typeof(Imports.Channel));
             cbCoupling.DataSource = Enum.GetValues(typeof(Imports.Coupling));
-            
+
         }
         #endregion
 
@@ -169,7 +156,7 @@ namespace PVLab
         }
         #endregion
 
- 
+
     }
 
 }
