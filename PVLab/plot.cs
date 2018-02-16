@@ -69,6 +69,7 @@ namespace PVLab
         // Click Helpers
         bool run = false;
         ushort RunStuffOrNot;
+        double iteration = 0;
 
         // PLOTT VARIABLER
         public LineSeries series1;
@@ -89,6 +90,9 @@ namespace PVLab
         double timeAtIndex;
         double sampleAtIndex;
         bool runSingle;
+        int indexOfComboBox;
+        int CenterValue;
+
         // Make a list to remember sampleCounts
         public List<int> sampleCountList;
         List<double> updateTimeList;
@@ -274,12 +278,14 @@ namespace PVLab
                 _ready = false;
                 status = Imports.GetStreamingLatestValues(_handle, StreamingCallback, IntPtr.Zero);
 
-
-
-
                 if (_ready && _sampleCount > 0) /* can be ready and have no data, if autoStop has fired */
                 {
+                    iteration += 1;
+                    ss = "New Iteration " + iteration + Environment.NewLine;
+                    InsertText(ss);
 
+                    // Since streaming can be very large amount of data, we choose to remove the old value
+                    // if we decide to not do that the memmory taken by streaming will increase very fast
                     if (updateTimeList.Count > 0)
                     {
                         updateTimeList.Clear();
@@ -292,19 +298,24 @@ namespace PVLab
                     }
 
                     // Each iteration the number of _samplecount will vary. And the values always start at zero. 
-                    // for instance First iteration start at 0 to t = 100 and second iteration it starts again at zero.
+                    // for instance First iteration start at 0 to t = 100 and second iteration it starts at the same
+                    // point it finished.
                     totalSamples += _sampleCount;
-                    sampleCountList.Add(_sampleCount);
+                    sampleCountList.Add(totalSamples);
+
                     if (_trig > 0)
                     {
 
                     }
+
+                    InsertText("Number of samples " + _sampleCount.ToString() + Environment.NewLine + "Start index is " + _startIndex.ToString() + Environment.NewLine);
 
                     for (uint i = _startIndex; i < (_startIndex + _sampleCount); i++)
                     {
                         // Insert samples in a list
                         UpdatedSampleList.Add(adc_to_mv(appBuffersPinned[0].Target[i], inputRanges[SelRangeIndex]));
                         double power = SampleIntervalr * Math.Pow(10, -9);
+
                         // Insert time in a list
                         updateTimeList.Add((double)(i * power));
 
@@ -315,20 +326,22 @@ namespace PVLab
                         // Calling the plotting Method for unconstraint streaming
                         PlottingMethod(updateTimeList, UpdatedSampleList);
                     }
-                    else if (rbRepeat.Checked)
+                    else if (rbRepeat.Checked && !runRepeat)
                     {
-                        // Calling repeatTrigger for constraint streaming set to Repeat
+                        // No direction specified
                         RepeatTrigger(updateTimeList, UpdatedSampleList, triggerAtNumber);
                     }
-                    else if (rbSingle.Checked)
+                    else if (rbSingle.Checked && !runSingle)
                     {
-                        // Calling SingleTrigger for  constraint streaming set to Single
+                        // Call singleTrigger without any direction specified.
                         SingleTrigger(updateTimeList, UpdatedSampleList, triggerAtNumber);
                     }
 
                 }
             }
         }
+
+
 
         /// <summary>
         /// Scaling from sample values to mv. can require modification
@@ -521,6 +534,8 @@ namespace PVLab
             }
             else
             {
+                ss = "Plot will get updated" + Environment.NewLine;
+                InsertText(ss);
                 // If the plot has been created then do this
                 UpdatePlot(time, sample, restOfPoints);
             }
@@ -545,12 +560,23 @@ namespace PVLab
         private void RepeatTrigger(List<double> time, List<double> sample, double f)
         {
 
+            // since the streaming occurs in a loop we need to be sure that the previouse values are gone.
+            // The reason for that is the fact that the values in the streaming change so using the same position
+            // in last loop will give wrong values. For instance if the index of an element of interest is 3
+            // and the value is 2000, and if we choose not to clear that index value in next iteration, the length of 
+            // indeces will increase and be longer.
             if (Indeces.Count > 0)
             {
+                ss = "Previouse indeces will get ereased now" + Environment.NewLine;
+                InsertText(ss);
                 Indeces.Clear();
             }
+
+            ss = "Search for indeces that corrospond to the triggered value that are between  " + (Error + f) + " and " + (f - Error) + Environment.NewLine;
+            InsertText(ss);
+
             // Finding the indeces of the element that trigger is sett to
-            for (int i = 0; i < sample.Count - 1; i++)
+            for (int i = 0; i < sample.Count; i++)
             {
                 if (sample[i] == f || (sample[i] <= f + Error && sample[i] >= f - Error))
                 {
@@ -562,8 +588,11 @@ namespace PVLab
 
             // count the number of element in in updatedSampleList
             var countValue = time.Count;
+            var countIndec = Indeces.Count;
             double time1;
             double sample1;
+            ss = "There are " + countIndec + " values corrosponding to the triggered value" + Environment.NewLine;
+            InsertText(ss);
 
             // if the number of elements of updatedSampleList is less than 41. show all of 
             // the list
@@ -573,56 +602,181 @@ namespace PVLab
             }
             else
             {
-                for (int i = 0; i < Indeces.Count - 1; i++)
+                // We need to plot the values for each iteration. Let's assume that we find a value that is equal to the trigged value
+                // we need to buil a curve that goes through that value. we choose to go 5 position forward and 5 backwards. The reason is
+                // only to see the curves at that time. Since we do this in a loop then the triggered could be at the end of the list where 
+                // it is impossible to go forward.
+                for (int i = 0; i < Indeces.Count; i++)
                 {
-                    SampleToPlot.Clear();
-                    TimeToPlot.Clear();
-
-                    if (Indeces[i] > 5 && Indeces[i] < time.Count - 5)
+                    if (!runRepeat)
                     {
-                        // In normal condition when the value has 20 elements before
-                        // and after
-                        for (int d = Indeces[i] - 5; d < Indeces[i] + 5; d++)
+                        SampleToPlot.Clear();
+                        TimeToPlot.Clear();
+
+                        // Checks different situation of trigging
+                        bool isThereValueAround = (Indeces[i] > 5 && Indeces[i] < time.Count - 5) ? true : false;
+                        bool isNoValueBefore = ((Indeces[i] < 5 && Indeces[i] < time.Count - 5) && CheckBoxValidation()) ? true : false;
+                        bool isNoValueAfter = ((Indeces[i] > 5 && Indeces[i] > time.Count - 5) && CheckBoxValidation()) ? true : false;
+
+                        if (isThereValueAround)
                         {
-                            SampleToPlot.Add(sample[d]);
-                            TimeToPlot.Add(time[d]);
+                            // Refer to the time intervall
+                            double repeatIndex = SampleIntervalr;
+
+                            // In normal condition when the value has 20 elements before
+                            // and after.
+                            ss = "There are more than 5 values after and before the triggered value in this iteration " + Environment.NewLine;
+                            InsertText(ss);
+                            for (int d = Indeces[i] - 5; d < Indeces[i] + 5; d++)
+                            {
+                                SampleToPlot.Add(sample[d]);
+                            }
+
+                            // Set negative side of time and zero time point
+                            for (int d = Indeces[i]; d >= Indeces[i] - 5; d--)
+                            {
+                                if (d == Indeces[i])
+                                {
+                                    TimeToPlot.Add(0);
+                                }
+                                else
+                                {
+                                    TimeToPlot.Add(-repeatIndex);
+                                    repeatIndex--;
+                                }
+                            }
+
+                            // Set positive side of time and zero time point
+                            for (int d = Indeces[i] + 1; d <= Indeces[i] + 5; d++)
+                            {
+                                TimeToPlot.Add(repeatIndex);
+                                repeatIndex++;
+                            }
+
+                            // Sort the elements from most negative to most positive.
+                            TimeToPlot.Sort();
+
+                        }
+                        else if (isNoValueBefore)
+                        {
+                            // Refer to sampling interval
+                            double repeatIndex = SampleIntervalr;
+
+                            // When the value has less elements before it
+                            ss = "There are less than 5 values  before the triggered value in this iteration " + Environment.NewLine;
+                            InsertText(ss);
+                            for (int d = Indeces[i]; d < Indeces[i] + 5; d++)
+                            {
+                                SampleToPlot.Add(sample[d]);
+                            }
+
+                            // Set negative side of time and zero time point
+                            for (int d = Indeces[i]; d >= Indeces[i] - 5; d--)
+                            {
+                                if (d == Indeces[i])
+                                {
+                                    TimeToPlot.Add(0);
+                                }
+                                else
+                                {
+                                    TimeToPlot.Add(repeatIndex);
+                                    repeatIndex--;
+                                }
+                            }
+                        }
+                        else if (isNoValueAfter)
+                        {
+                            // Refer to the time intervall
+                            double repeatIndex = SampleIntervalr;
+
+                            // then value doesnt have enough elements after
+                            ss = "There are less than 5 values after the triggered value in this iteration " + Environment.NewLine;
+                            InsertText(ss);
+                            for (int d = Indeces[i] - 5; d < time.Count; d++)
+                            {
+                                SampleToPlot.Add(sample[d]);
+                            }
+
+                            // Set positive side of time and zero time point
+                            for (int d = Indeces[i]; d <= Indeces[i] + 5; d++)
+                            {
+                                if (d == Indeces[i])
+                                {
+                                    TimeToPlot.Add(0);
+                                }
+                                else
+                                {
+                                    TimeToPlot.Add(repeatIndex);
+                                    repeatIndex++;
+                                }
+
+                            }
                         }
 
-                    }
-                    else if (Indeces[i] < 5 && Indeces[i] < time.Count - 5)
-                    {
-                        // When the value has less elements before it
-                        for (int d = Indeces[i]; d < Indeces[i] + 5; d++)
+                        // The value that the user wants to trigger at is as following
+                        time1 = time[Indeces[i]];
+                        sample1 = sample[Indeces[i]];
+                        ss = "The triggered value for this iteration is  " + sample1 + Environment.NewLine;
+                        InsertText(ss);
+
+                        // When selecting the trigger state(rising and falling)
+                        // we look at the value after. if that value is higher then
+                        // the voltage is increasing. If the value is less then the 
+                        // voltage is decreasing. For this to happen we need to be 
+                        // sure that the combox box is active and user has choosen
+                        // an item from the list. We pass the value to plottingmetod.
+                        // If instead no item in the combo box is selected then we do 
+                        // repeat trigger in both direction.
+
+                        CenterValue = SampleToPlot.FindIndex(item => item == sample1);
+                        bool ExistValueAround = ((SampleToPlot.Count > 0) && (CenterValue < SampleToPlot.Count)) ? true : false;
+
+
+                        switch (GetIndexComBo())
                         {
-                            SampleToPlot.Add(sample[d]);
-                            TimeToPlot.Add(time[d]);
+                            // No direction
+                            case -1:
+                                ss = "No item is selected in the combo box " + Environment.NewLine;
+                                InsertText(ss);
+
+                                // Show
+                                PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
+                                break;
+
+                            // Rising
+                            case 0:
+                                if (ExistValueAround && (SampleToPlot[CenterValue + 1] > sample1))
+                                {
+
+                                    ss = "Rising mode is selected in the combo box" + Environment.NewLine;
+                                    // Gör rising
+                                    PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
+                                }
+                                break;
+
+                            // Falling
+                            case 1:
+
+                                if (ExistValueAround && (SampleToPlot[CenterValue + 1] < sample1))
+                                {
+                                    ss = "Falling mode is selected in the combo box " + Environment.NewLine;
+                                    // Gör falling
+                                    PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
+                                }
+
+                                break;
                         }
-                    }
-                    else if (Indeces[i] > 5 && Indeces[i] > time.Count - 5)
-                    {
-                        // then value doesnt have enough elements after
-                        for (int d = Indeces[i] - 5; d < time.Count; d++)
-                        {
-                            SampleToPlot.Add(sample[d]);
-                            TimeToPlot.Add(time[d]);
-                        }
+
+
                     }
 
-                    time1 = time[Indeces[i]];
-                    sample1 = sample[Indeces[i]];
-
-                    // Send data to be plotted
-                    PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
-
-                    // sleep
-                    Thread.Sleep(500);
                 }
-
-
-
-
+                // sleep
+                Thread.Sleep(500);
             }
+
         }
+
 
         /// <summary>
         /// Single Trigger:
@@ -632,12 +786,12 @@ namespace PVLab
         /// Searching for the position of the element in the streaming values.
         /// Searching for the value itself and pass it to plottingMethod.
         /// </summary>
-        private void SingleTrigger(List<double> time, List<double> sample, double f)
+        private void SingleTrigger(List<double> time, List<double> sample, double f, params object[] restOfArguments)
         {
             if (runSingle)
             {
                 // Finding the indeces of the element that trigger is sett to
-                for (int i = 0; i < sample.Count - 1; i++)
+                for (int i = 0; i < sample.Count; i++)
                 {
                     if (sample[i] == f || (sample[i] <= f + Error && sample[i] >= f - Error))
                     {
@@ -690,8 +844,48 @@ namespace PVLab
                         }
                     }
 
+
+
                     time1 = time[Indeces[0]];
                     sample1 = sample[Indeces[0]];
+
+                    CenterValue = SampleToPlot.FindIndex(item => item == sample1);
+
+                    switch (GetIndexComBo())
+                    {
+                        // No direction
+                        case -1:
+                            PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
+                            break;
+
+                        // Rising
+                        case 0:
+                            if (SampleToPlot[CenterValue + 1] > sample1)
+                            {
+                                // Gör rising
+                                PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
+                            }
+                            else
+                            {
+
+                            }
+                            break;
+
+                        // Falling
+                        case 1:
+
+                            if (SampleToPlot[CenterValue + 1] < sample1)
+                            {
+                                // Gör falling
+                                PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
+                            }
+                            else
+                            {
+
+                            }
+
+                            break;
+                    }
 
                     // Send data to be plotted
                     PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
@@ -731,11 +925,13 @@ namespace PVLab
                 {
                     if (ValidateTheTextBox())
                     {
+
                         RunStuffOrNot = 1;
                         thread = new Thread(new ThreadStart(RunStreaming));
                         ss = "Thread started for Repeat Trigger" + Environment.NewLine;
                         InsertText(ss);
                         runRepeat = false;
+                        thread.Start();
                     }
                     else
                     {
@@ -748,6 +944,7 @@ namespace PVLab
                     thread = new Thread(new ThreadStart(RunStreaming));
                     ss = "Thread started for None Trigger" + Environment.NewLine;
                     InsertText(ss);
+                    thread.Start();
 
                 }
                 else if (rbSingle.Checked)
@@ -759,14 +956,23 @@ namespace PVLab
                         runSingle = true;
                         ss = "Thread started for Single Trigger" + Environment.NewLine;
                         InsertText(ss);
+                        thread.Start();
                     }
                     else
                     {
                         MessageBox.Show("You have to insert a proper value");
                     }
                 }
+                else
+                {
+                    RunStuffOrNot = 1;
+                    thread = new Thread(new ThreadStart(RunStreaming));
+                    ss = "Thread started for None Trigger" + Environment.NewLine;
+                    InsertText(ss);
+                    thread.Start();
+                }
 
-                thread.Start();
+
                 btnStream.Text = "Stop Streaming";
                 ss = "Thread started" + Environment.NewLine;
                 InsertText(ss);
@@ -850,8 +1056,50 @@ namespace PVLab
                 txtStatus.AppendText(ss);
             }
         }
+
+        /// <summary>
+        /// Getting the index of selected item in the combo box for directions
+        /// </summary>
+        /// <returns></returns>
+        public int GetIndexComBo()
+        {
+            int index = -1;
+            if (cbDirection.InvokeRequired)
+            {
+                index = (int)cbDirection.Invoke(new Func<int>(() => cbDirection.SelectedIndex));
+            }
+            else
+            {
+                index = cbDirection.SelectedIndex;
+            }
+            return index;
+        }
+
+        /// <summary>
+        /// Checks if the checkbox is activated
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckBoxValidation()
+        {
+            bool index = false;
+            if (chbDetaljs.InvokeRequired)
+            {
+                index = (bool)chbDetaljs.Invoke(new Func<bool>(() => chbDetaljs.Checked));
+            }
+            else
+            {
+                index = chbDetaljs.Checked;
+            }
+            return index;
+        }
+
         #endregion
 
+        private void btnDrop_Click(object sender, EventArgs e)
+        {
+            Imports.CloseUnit(_handle);
+            this.Close();
+        }
     }
 }
 
