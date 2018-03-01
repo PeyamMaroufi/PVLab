@@ -29,9 +29,6 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label10 = new System.Windows.Forms.Label();
-            this.txtRate = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.btnOpen = new System.Windows.Forms.Button();
             this.btnStreaming = new System.Windows.Forms.Button();
             this.txtSamplingInterval = new System.Windows.Forms.TextBox();
@@ -43,11 +40,12 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.txtStatus = new System.Windows.Forms.TextBox();
+            this.txtProperty = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,9 +54,6 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.label10);
-            this.panel1.Controls.Add(this.txtRate);
-            this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.btnOpen);
             this.panel1.Controls.Add(this.btnStreaming);
             this.panel1.Controls.Add(this.txtSamplingInterval);
@@ -70,38 +65,12 @@
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(12, 13);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1018, 113);
             this.panel1.TabIndex = 0;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(182, 68);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(20, 13);
-            this.label10.TabIndex = 31;
-            this.label10.Text = "Hz";
-            // 
-            // txtRate
-            // 
-            this.txtRate.Location = new System.Drawing.Point(100, 63);
-            this.txtRate.Name = "txtRate";
-            this.txtRate.Size = new System.Drawing.Size(76, 20);
-            this.txtRate.TabIndex = 30;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(182, 34);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 13);
-            this.label2.TabIndex = 29;
-            this.label2.Text = "Nano sec";
             // 
             // btnOpen
             // 
@@ -125,11 +94,10 @@
             // 
             // txtSamplingInterval
             // 
-            this.txtSamplingInterval.Location = new System.Drawing.Point(100, 31);
+            this.txtSamplingInterval.Location = new System.Drawing.Point(175, 45);
             this.txtSamplingInterval.Name = "txtSamplingInterval";
-            this.txtSamplingInterval.Size = new System.Drawing.Size(76, 20);
+            this.txtSamplingInterval.Size = new System.Drawing.Size(95, 20);
             this.txtSamplingInterval.TabIndex = 25;
-            this.txtSamplingInterval.TextChanged += new System.EventHandler(this.txtSamplingInterval_TextChanged);
             // 
             // cbRes
             // 
@@ -138,6 +106,7 @@
             this.cbRes.Name = "cbRes";
             this.cbRes.Size = new System.Drawing.Size(95, 21);
             this.cbRes.TabIndex = 24;
+            this.cbRes.SelectedIndexChanged += new System.EventHandler(this.cbRes_SelectedIndexChanged);
             // 
             // cbCoupling
             // 
@@ -200,15 +169,6 @@
             this.label4.TabIndex = 5;
             this.label4.Text = "Channels:";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 66);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(79, 13);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Sampling Rate:";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -221,16 +181,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 34);
+            this.label1.Location = new System.Drawing.Point(41, 49);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
+            this.label1.Size = new System.Drawing.Size(128, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Sampling Int:";
+            this.label1.Text = "Capturing Interval Interval";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(10, 131);
+            this.label9.Location = new System.Drawing.Point(9, 401);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(40, 13);
             this.label9.TabIndex = 2;
@@ -241,17 +201,41 @@
             this.txtStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtStatus.Location = new System.Drawing.Point(12, 147);
+            this.txtStatus.Location = new System.Drawing.Point(12, 324);
             this.txtStatus.Multiline = true;
             this.txtStatus.Name = "txtStatus";
-            this.txtStatus.Size = new System.Drawing.Size(1018, 128);
+            this.txtStatus.ReadOnly = true;
+            this.txtStatus.Size = new System.Drawing.Size(1018, 259);
             this.txtStatus.TabIndex = 3;
+            // 
+            // txtProperty
+            // 
+            this.txtProperty.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtProperty.Location = new System.Drawing.Point(12, 155);
+            this.txtProperty.Multiline = true;
+            this.txtProperty.Name = "txtProperty";
+            this.txtProperty.ReadOnly = true;
+            this.txtProperty.Size = new System.Drawing.Size(1018, 163);
+            this.txtProperty.TabIndex = 4;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 139);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(106, 13);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "Sampling Properties: ";
             // 
             // PVLab
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1042, 287);
+            this.ClientSize = new System.Drawing.Size(1042, 595);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txtProperty);
             this.Controls.Add(this.txtStatus);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.panel1);
@@ -270,7 +254,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnStart;
@@ -281,11 +264,10 @@
         private System.Windows.Forms.TextBox txtSamplingInterval;
         private System.Windows.Forms.Button btnStreaming;
         private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtRate;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtStatus;
+        private System.Windows.Forms.TextBox txtProperty;
+        private System.Windows.Forms.Label label6;
     }
 }
 
