@@ -163,7 +163,7 @@ namespace PVLab
         /// <summary>
         ///  Closing the unit and inactivate the handel
         /// </summary>
-        public static void CloseUnit()
+        public  static void CloseUnit()
         {
             Imports.CloseUnit(StaticVariable._handle);
             StaticVariable._handle = 0;

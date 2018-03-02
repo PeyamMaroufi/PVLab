@@ -47,6 +47,7 @@ namespace PVLab
         Thread thread;
         int valueIndex;
         double timeInDiv;
+        bool openClose = false;
         #endregion
 
         #region Construction and UI initialization
@@ -198,7 +199,7 @@ namespace PVLab
 
             // Define axis with limits
             linearAxis1 = new LinearAxis { Position = AxisPosition.Bottom };
-            linearAxis2 = new LinearAxis { Position = AxisPosition.Left, Title = "Voltage" };
+            linearAxis2 = new LinearAxis { Position = AxisPosition.Left, Title = "Voltage", Minimum = -1 * StaticVariable.voltages[StaticVariable.SelRangeIndex], Maximum = StaticVariable.voltages[StaticVariable.SelRangeIndex] };
 
             // Add it to the model
             myModel.Axes.Add(linearAxis1);
@@ -220,7 +221,7 @@ namespace PVLab
                 myModel.Series.Add(series2);
             }
 
-            for (int i = 0; i < time.Count-1; i++)
+            for (int i = 0; i < time.Count - 1; i++)
             {
                 //timeInDiv = time[i] / divValue;
                 series1.Points.Add(new OxyPlot.DataPoint(time[i], sample[i]));
@@ -268,17 +269,17 @@ namespace PVLab
 
                 //string num = series1.Points.Count.ToString();
 
-                //if (restOfPointsToUdate.Length > 0)
-                //{
-                //    timeAtIndex = (double)restOfPointsToUdate[0];
-                //    sampleAtIndex = (double)restOfPointsToUdate[1];
-                //    series2.Points.Add(new OxyPlot.DataPoint(timeAtIndex / divValue, sampleAtIndex));
-                //    myModel.Series.Add(series2);
-                //}
+                if (restOfPointsToUdate.Length > 0)
+                {
+                    timeAtIndex = (double)restOfPointsToUdate[0];
+                    sampleAtIndex = (double)restOfPointsToUdate[1];
+                    series2.Points.Add(new OxyPlot.DataPoint(timeAtIndex / divValue, sampleAtIndex));
+                    myModel.Series.Add(series2);
+                }
 
 
                 // Adding new values
-                for (int i = 0; i < time.Count-1; i++)
+                for (int i = 0; i < time.Count - 1; i++)
                 {
                     //timeInDiv = time[i] / divValue;
                     series1.Points.Add(new OxyPlot.DataPoint(time[i], sample[i]));
@@ -355,10 +356,7 @@ namespace PVLab
 
                         // Trigger repeat
                         StaticVariable.RunRepeat = false;
-
-                        // start the timer
-                        streaming.StartTimer(true);
-
+                        StaticVariable.ISaidRun = true;
                         // start the thread
                         thread.Start();
                     }
@@ -374,7 +372,6 @@ namespace PVLab
                     ss = "Thread started for None Trigger" + Environment.NewLine;
                     InsertText(ss);
                     thread.Start();
-                    streaming.StartTimer(true);
                     StaticVariable.ISaidRun = true;
 
                 }
@@ -387,8 +384,8 @@ namespace PVLab
                         StaticVariable.RunSingle = true;
                         ss = "Thread started for Single Trigger" + Environment.NewLine;
                         InsertText(ss);
+                        StaticVariable.ISaidRun = true;
                         thread.Start();
-                        streaming.StartTimer(true);
                     }
                     else
                     {
@@ -402,7 +399,6 @@ namespace PVLab
                     ss = "Thread started for None Trigger" + Environment.NewLine;
                     InsertText(ss);
                     thread.Start();
-                    streaming.StartTimer(true);
                 }
 
 
@@ -423,7 +419,7 @@ namespace PVLab
                 run = false;
                 StaticVariable.RunSingle = true;
                 StaticVariable.RunRepeat = true;
-                streaming.StartTimer(false);
+                StaticVariable.ISaidRun = false;
 
             }
         }
@@ -461,9 +457,11 @@ namespace PVLab
 
         private void btnDrop_Click(object sender, EventArgs e)
         {
+
             // call CloseUnit method in second base class
-            SettingUpBlockRecordAndStream.CloseUnit();
+            Imports.CloseUnit(StaticVariable._handle);
             this.Close();
+
         }
 
         #endregion

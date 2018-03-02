@@ -37,13 +37,11 @@ namespace PVLab
         int _channelCount = 1;
 
         int CenterValue;
-        private static System.Timers.Timer aTimer;
 
 
         #endregion
 
-        #region Call Stream
-
+        #region Constructor
         public Streaming()
         {
             sampleCountList = new List<int>();
@@ -53,45 +51,11 @@ namespace PVLab
             SampleToPlot = new List<double>();
             Indeces = new List<int>();
             _handle = StaticVariable._handle;
-            aTimer = new System.Timers.Timer();
-            aTimer.Interval = 500;
-            aTimer.AutoReset = true;
-            aTimer.Elapsed += ATimer_Elapsed;
-
 
         }
+        #endregion
 
-        private void ATimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            // Calling the plotting Method for unconstraint streaming
-            if (StaticVariable.CheckRbs == 0)
-            {
-                StaticVariable.form.PlottingMethod(updateTimeList, UpdatedSampleList);
-            }
-            //else if (StaticVariable.CheckRbs == 1 && !StaticVariable.RunRepeat)
-            //{
-            //    // No direction specified
-            //    RepeatTrigger(updateTimeList, UpdatedSampleList, StaticVariable.TriggerAt);
-            //}
-            //else if (StaticVariable.CheckRbs == 2 && StaticVariable.RunSingle)
-            //{
-            //    // Call singleTrigger without any direction specified.
-            //    SingleTrigger(updateTimeList, UpdatedSampleList, StaticVariable.TriggerAt);
-            //}
-        }
-
-        public void StartTimer(bool dec)
-        {
-            if (dec)
-            {
-                aTimer.Enabled = false;
-            }
-            else
-            {
-                aTimer.Enabled = false;
-            }
-        }
-
+        #region Call Stream
         /// <summary>
         /// Required for current streaming especially for getting values and buffering
         /// </summary>
@@ -358,9 +322,9 @@ namespace PVLab
                         TimeToPlot.Clear();
 
                         // Checks different situation of trigging
-                        bool isThereValueAround = (Indeces[i] > 5 && Indeces[i] < time.Count - 5) ? true : false;
-                        bool isNoValueBefore = ((Indeces[i] < 5 && Indeces[i] < time.Count - 5) && StaticVariable.form.CheckBoxValidation()) ? true : false;
-                        bool isNoValueAfter = ((Indeces[i] > 5 && Indeces[i] > time.Count - 5) && StaticVariable.form.CheckBoxValidation()) ? true : false;
+                        bool isThereValueAround = (Indeces[i] > 30 && Indeces[i] < time.Count - 30) ? true : false;
+                        bool isNoValueBefore = ((Indeces[i] < 30 && Indeces[i] < time.Count - 30) && StaticVariable.form.CheckBoxValidation()) ? true : false;
+                        bool isNoValueAfter = ((Indeces[i] > 30 && Indeces[i] > time.Count - 30) && StaticVariable.form.CheckBoxValidation()) ? true : false;
 
                         if (isThereValueAround)
                         {
@@ -371,13 +335,13 @@ namespace PVLab
                             // and after.
                             ss = "There are more than 5 values after and before the triggered value in this iteration " + Environment.NewLine;
                             StaticVariable.form.InsertText(ss);
-                            for (int d = Indeces[i] - 5; d < Indeces[i] + 5; d++)
+                            for (int d = Indeces[i] - 30; d < Indeces[i] + 30; d++)
                             {
                                 SampleToPlot.Add(sample[d]);
                             }
 
                             // Set negative side of time and zero time point
-                            for (int d = Indeces[i]; d >= Indeces[i] - 5; d--)
+                            for (int d = Indeces[i]; d >= Indeces[i] - 30; d--)
                             {
                                 if (d == Indeces[i])
                                 {
@@ -391,7 +355,7 @@ namespace PVLab
                             }
 
                             // Set positive side of time and zero time point
-                            for (int d = Indeces[i] + 1; d <= Indeces[i] + 5; d++)
+                            for (int d = Indeces[i] + 1; d <= Indeces[i] + 30; d++)
                             {
                                 TimeToPlot.Add(repeatIndex);
                                 repeatIndex++;
@@ -409,13 +373,13 @@ namespace PVLab
                             // When the value has less elements before it
                             ss = "There are less than 5 values  before the triggered value in this iteration " + Environment.NewLine;
                             StaticVariable.form.InsertText(ss);
-                            for (int d = Indeces[i]; d < Indeces[i] + 5; d++)
+                            for (int d = Indeces[i]; d < Indeces[i] + 30; d++)
                             {
                                 SampleToPlot.Add(sample[d]);
                             }
 
                             // Set negative side of time and zero time point
-                            for (int d = Indeces[i]; d >= Indeces[i] - 5; d--)
+                            for (int d = Indeces[i]; d >= Indeces[i] - 30; d--)
                             {
                                 if (d == Indeces[i])
                                 {
@@ -436,13 +400,13 @@ namespace PVLab
                             // then value doesnt have enough elements after
                             ss = "There are less than 5 values after the triggered value in this iteration " + Environment.NewLine;
                             StaticVariable.form.InsertText(ss);
-                            for (int d = Indeces[i] - 5; d < time.Count; d++)
+                            for (int d = Indeces[i] - 30; d < time.Count; d++)
                             {
                                 SampleToPlot.Add(sample[d]);
                             }
 
                             // Set positive side of time and zero time point
-                            for (int d = Indeces[i]; d <= Indeces[i] + 5; d++)
+                            for (int d = Indeces[i]; d <= Indeces[i] + 30; d++)
                             {
                                 if (d == Indeces[i])
                                 {
@@ -516,7 +480,7 @@ namespace PVLab
 
                 }
                 // sleep
-                Thread.Sleep(500);
+                //Thread.Sleep(500);
             }
 
         }

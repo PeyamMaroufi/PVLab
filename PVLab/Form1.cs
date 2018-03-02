@@ -125,19 +125,6 @@ namespace PVLab
                 SampllingIntervall = uint.Parse(txtSamplingInterval.Text);
                 txtProperty.AppendText("Chosen " + SampllingIntervall.ToString() + " ns" + Environment.NewLine);
 
-                //// Division selection
-                //txtProperty.AppendText("Choosen division is " + cbTimeBase.SelectedItem + Environment.NewLine);
-                //value = (double)cbTimeBase.SelectedValue;
-                //txtProperty.AppendText("Value of division  " + value.ToString() + Environment.NewLine);
-
-                //// Interval in sec
-                //timeinterval = (value / SampllingIntervall);
-                //txtProperty.AppendText("Sampling interval is  " + timeinterval.ToString() + " s" + Environment.NewLine);
-
-                //double sampleIntervalInSec = SampllingIntervall * Math.Pow(10, -9);
-                //frequency = 1 / sampleIntervalInSec;
-                //txtProperty.AppendText("Sampling frequency is  " + frequency.ToString() + " Hz" + Environment.NewLine);
-
                 // Time base calculations
                 StaticVariable.resolution = (Imports.DeviceResolution)cbRes.SelectedItem;
 
