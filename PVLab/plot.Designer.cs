@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.lblPoints = new System.Windows.Forms.Label();
+            this.txtSignal = new System.Windows.Forms.TextBox();
             this.NumberOfSampleUpAndDown = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -48,9 +51,6 @@
             this.rbNone = new System.Windows.Forms.RadioButton();
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.plotView1 = new OxyPlot.WindowsForms.PlotView();
-            this.txtSignal = new System.Windows.Forms.TextBox();
-            this.lblPoints = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NumberOfSampleUpAndDown)).BeginInit();
             this.SuspendLayout();
@@ -85,6 +85,34 @@
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Control";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(615, 57);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(36, 13);
+            this.label2.TabIndex = 46;
+            this.label2.Text = "Points";
+            // 
+            // lblPoints
+            // 
+            this.lblPoints.AutoSize = true;
+            this.lblPoints.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblPoints.Location = new System.Drawing.Point(686, 58);
+            this.lblPoints.Name = "lblPoints";
+            this.lblPoints.Size = new System.Drawing.Size(44, 15);
+            this.lblPoints.TabIndex = 45;
+            this.lblPoints.Text = "Update";
+            // 
+            // txtSignal
+            // 
+            this.txtSignal.Location = new System.Drawing.Point(782, 12);
+            this.txtSignal.Multiline = true;
+            this.txtSignal.Name = "txtSignal";
+            this.txtSignal.ReadOnly = true;
+            this.txtSignal.Size = new System.Drawing.Size(236, 73);
+            this.txtSignal.TabIndex = 44;
             // 
             // NumberOfSampleUpAndDown
             // 
@@ -224,6 +252,7 @@
             this.cbDirection.Name = "cbDirection";
             this.cbDirection.Size = new System.Drawing.Size(80, 21);
             this.cbDirection.TabIndex = 8;
+            this.cbDirection.SelectedIndexChanged += new System.EventHandler(this.cbDirection_SelectedIndexChanged);
             // 
             // lbPoints
             // 
@@ -309,34 +338,6 @@
             this.plotView1.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
             this.plotView1.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
             this.plotView1.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
-            // 
-            // txtSignal
-            // 
-            this.txtSignal.Location = new System.Drawing.Point(782, 12);
-            this.txtSignal.Multiline = true;
-            this.txtSignal.Name = "txtSignal";
-            this.txtSignal.ReadOnly = true;
-            this.txtSignal.Size = new System.Drawing.Size(236, 73);
-            this.txtSignal.TabIndex = 44;
-            // 
-            // lblPoints
-            // 
-            this.lblPoints.AutoSize = true;
-            this.lblPoints.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblPoints.Location = new System.Drawing.Point(686, 58);
-            this.lblPoints.Name = "lblPoints";
-            this.lblPoints.Size = new System.Drawing.Size(44, 15);
-            this.lblPoints.TabIndex = 45;
-            this.lblPoints.Text = "Update";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(615, 57);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(36, 13);
-            this.label2.TabIndex = 46;
-            this.label2.Text = "Points";
             // 
             // Plot
             // 

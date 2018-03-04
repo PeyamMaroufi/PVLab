@@ -323,13 +323,13 @@ namespace PVLab
 
                         // Checks different situation of trigging
                         bool isThereValueAround = (Indeces[i] > 30 && Indeces[i] < time.Count - 30) ? true : false;
-                        bool isNoValueBefore = ((Indeces[i] < 30 && Indeces[i] < time.Count - 30) && StaticVariable.form.CheckBoxValidation()) ? true : false;
-                        bool isNoValueAfter = ((Indeces[i] > 30 && Indeces[i] > time.Count - 30) && StaticVariable.form.CheckBoxValidation()) ? true : false;
+                        bool isNoValueBefore = ((Indeces[i] < 30 && Indeces[i] < time.Count - 30) && StaticVariable.CheckBoxStatus) ? true : false;
+                        bool isNoValueAfter = ((Indeces[i] > 30 && Indeces[i] > time.Count - 30) && StaticVariable.CheckBoxStatus) ? true : false;
 
                         if (isThereValueAround)
                         {
                             // Refer to the time intervall
-                            double repeatIndex = StaticVariable.SampleInterval;
+                            double repeatIndex = sampleInterval / StaticVariable.DivValue;
 
                             // In normal condition when the value has 20 elements before
                             // and after.
@@ -355,7 +355,7 @@ namespace PVLab
                             }
 
                             // Set positive side of time and zero time point
-                            for (int d = Indeces[i] + 1; d <= Indeces[i] + 30; d++)
+                            for (int d = Indeces[i] + 1; d < Indeces[i] + 30; d++)
                             {
                                 TimeToPlot.Add(repeatIndex);
                                 repeatIndex++;
@@ -365,64 +365,64 @@ namespace PVLab
                             TimeToPlot.Sort();
 
                         }
-                        else if (isNoValueBefore)
-                        {
-                            // Refer to sampling interval
-                            double repeatIndex = StaticVariable.SampleInterval;
+                        //else if (isNoValueBefore)
+                        //{
+                        //    // Refer to sampling interval
+                        //    double repeatIndex = StaticVariable.SampleInterval;
 
-                            // When the value has less elements before it
-                            ss = "There are less than 5 values  before the triggered value in this iteration " + Environment.NewLine;
-                            StaticVariable.form.InsertText(ss);
-                            for (int d = Indeces[i]; d < Indeces[i] + 30; d++)
-                            {
-                                SampleToPlot.Add(sample[d]);
-                            }
+                        //    // When the value has less elements before it
+                        //    ss = "There are less than 5 values  before the triggered value in this iteration " + Environment.NewLine;
+                        //    StaticVariable.form.InsertText(ss);
+                        //    for (int d = Indeces[i]; d < Indeces[i] + 30; d++)
+                        //    {
+                        //        SampleToPlot.Add(sample[d]);
+                        //    }
 
-                            // Set negative side of time and zero time point
-                            for (int d = Indeces[i]; d >= Indeces[i] - 30; d--)
-                            {
-                                if (d == Indeces[i])
-                                {
-                                    TimeToPlot.Add(0);
-                                }
-                                else
-                                {
-                                    TimeToPlot.Add(repeatIndex);
-                                    repeatIndex--;
-                                }
-                            }
-                        }
-                        else if (isNoValueAfter)
-                        {
-                            // Refer to the time intervall
-                            double repeatIndex = StaticVariable.SampleInterval;
+                        //    // Set negative side of time and zero time point
+                        //    for (int d = Indeces[i]; d <= Indeces[i] + 30; d++)
+                        //    {
+                        //        if (d == Indeces[i])
+                        //        {
+                        //            TimeToPlot.Add(0);
+                        //        }
+                        //        else
+                        //        {
+                        //            TimeToPlot.Add(repeatIndex);
+                        //            repeatIndex++;
+                        //        }
+                        //    }
+                        //}
+                        //else if (isNoValueAfter)
+                        //{
+                        //    // Refer to the time intervall
+                        //    double repeatIndex = StaticVariable.SampleInterval;
 
-                            // then value doesnt have enough elements after
-                            ss = "There are less than 5 values after the triggered value in this iteration " + Environment.NewLine;
-                            StaticVariable.form.InsertText(ss);
-                            for (int d = Indeces[i] - 30; d < time.Count; d++)
-                            {
-                                SampleToPlot.Add(sample[d]);
-                            }
+                        //    // then value doesnt have enough elements after
+                        //    ss = "There are less than 5 values after the triggered value in this iteration " + Environment.NewLine;
+                        //    StaticVariable.form.InsertText(ss);
+                        //    for (int d = Indeces[i] - 30; d < time.Count; d++)
+                        //    {
+                        //        SampleToPlot.Add(sample[d]);
+                        //    }
 
-                            // Set positive side of time and zero time point
-                            for (int d = Indeces[i]; d <= Indeces[i] + 30; d++)
-                            {
-                                if (d == Indeces[i])
-                                {
-                                    TimeToPlot.Add(0);
-                                }
-                                else
-                                {
-                                    TimeToPlot.Add(repeatIndex);
-                                    repeatIndex++;
-                                }
+                        //    // Set positive side of time and zero time point
+                        //    for (int d = Indeces[i]; d <= Indeces[i] + 30; d++)
+                        //    {
+                        //        if (d == Indeces[i])
+                        //        {
+                        //            TimeToPlot.Add(0);
+                        //        }
+                        //        else
+                        //        {
+                        //            TimeToPlot.Add(repeatIndex);
+                        //            repeatIndex++;
+                        //        }
 
-                            }
-                        }
+                        //    }
+                        //}
 
                         // The value that the user wants to trigger at is as following
-                        time1 = time[Indeces[i]];
+                        time1 = 0;
                         sample1 = sample[Indeces[i]];
                         ss = "The triggered value for this iteration is  " + sample1 + Environment.NewLine;
                         StaticVariable.form.InsertText(ss);
@@ -440,7 +440,7 @@ namespace PVLab
                         bool ExistValueAround = ((SampleToPlot.Count > 0) && (CenterValue < SampleToPlot.Count)) ? true : false;
 
 
-                        switch (StaticVariable.form.GetIndexComBo())
+                        switch (StaticVariable.RaisingFallingIndex)
                         {
                             // No direction
                             case -1:
@@ -453,13 +453,14 @@ namespace PVLab
 
                             // Rising
                             case 0:
-                                if (ExistValueAround && (SampleToPlot[CenterValue + 1] > sample1))
+                                if (ExistValueAround && (SampleToPlot[CenterValue - 1] < sample1))
                                 {
 
                                     ss = "Rising mode is selected in the combo box" + Environment.NewLine;
                                     // Gör rising
                                     StaticVariable.form.PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
                                 }
+                                else { continue; }
                                 break;
 
                             // Falling
@@ -538,13 +539,13 @@ namespace PVLab
                             // and after.
                             ss = "There are more than 5 values after and before the triggered value in this iteration " + Environment.NewLine;
                             StaticVariable.form.InsertText(ss);
-                            for (int d = Indeces[0] - 5; d < Indeces[0] + 5; d++)
+                            for (int d = Indeces[0] - 10; d < Indeces[0] + 10; d++)
                             {
                                 SampleToPlot.Add(sample[d]);
                             }
 
                             // Set negative side of time and zero time point
-                            for (int d = Indeces[0]; d >= Indeces[0] - 5; d--)
+                            for (int d = Indeces[0]; d >= Indeces[0] - 10; d--)
                             {
                                 if (d == Indeces[0])
                                 {
@@ -558,7 +559,7 @@ namespace PVLab
                             }
 
                             // Set positive side of time and zero time point
-                            for (int d = Indeces[0] + 1; d <= Indeces[0] + 5; d++)
+                            for (int d = Indeces[0] + 1; d <= Indeces[0] + 10; d++)
                             {
                                 TimeToPlot.Add(repeatIndex);
                                 repeatIndex++;
@@ -577,13 +578,13 @@ namespace PVLab
                             // When the value has less elements before it
                             ss = "There are less than 5 values  before the triggered value in this iteration " + Environment.NewLine;
                             StaticVariable.form.InsertText(ss);
-                            for (int d = Indeces[0]; d < Indeces[0] + 5; d++)
+                            for (int d = Indeces[0]; d < Indeces[0] + 10; d++)
                             {
                                 SampleToPlot.Add(sample[d]);
                             }
 
                             // Set negative side of time and zero time point
-                            for (int d = Indeces[0]; d >= Indeces[0] - 5; d--)
+                            for (int d = Indeces[0]; d >= Indeces[0] - 10; d--)
                             {
                                 if (d == Indeces[0])
                                 {
@@ -604,13 +605,13 @@ namespace PVLab
                             // then value doesnt have enough elements after
                             ss = "There are less than 5 values after the triggered value in this iteration " + Environment.NewLine;
                             StaticVariable.form.InsertText(ss);
-                            for (int d = Indeces[0] - 5; d < time.Count; d++)
+                            for (int d = Indeces[0] - 10; d < time.Count; d++)
                             {
                                 SampleToPlot.Add(sample[d]);
                             }
 
                             // Set positive side of time and zero time point
-                            for (int d = Indeces[0]; d <= Indeces[0] + 5; d++)
+                            for (int d = Indeces[0]; d <= Indeces[0] + 10; d++)
                             {
                                 if (d == Indeces[0])
                                 {
@@ -634,7 +635,7 @@ namespace PVLab
                         bool ExistValueAround = ((SampleToPlot.Count > 0) && (CenterValue < SampleToPlot.Count)) ? true : false;
 
 
-                        switch (StaticVariable.form.GetIndexComBo())
+                        switch (StaticVariable.RaisingFallingIndex)
                         {
                             // No direction
                             case -1:

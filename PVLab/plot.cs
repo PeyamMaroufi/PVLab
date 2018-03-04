@@ -205,6 +205,16 @@ namespace PVLab
             myModel.Axes.Add(linearAxis1);
             myModel.Axes.Add(linearAxis2);
 
+
+            for (int i = 0; i < time.Count - 1; i++)
+            {
+                //timeInDiv = time[i] / divValue;
+                series1.Points.Add(new OxyPlot.DataPoint(time[i], sample[i]));
+            }
+
+            // Merge the serie to the model
+            myModel.Series.Add(series1);
+
             // Show the triggered value on the plot
             if (restOfPointsToPlote.Length > 0)
             {
@@ -221,14 +231,6 @@ namespace PVLab
                 myModel.Series.Add(series2);
             }
 
-            for (int i = 0; i < time.Count - 1; i++)
-            {
-                //timeInDiv = time[i] / divValue;
-                series1.Points.Add(new OxyPlot.DataPoint(time[i], sample[i]));
-            }
-
-            // Merge the serie to the model
-            myModel.Series.Add(series1);
             // Merge the model to the plotView
             plotView1.Model = myModel;
             // in order to avoid creating plotModel again
@@ -269,13 +271,6 @@ namespace PVLab
 
                 //string num = series1.Points.Count.ToString();
 
-                if (restOfPointsToUdate.Length > 0)
-                {
-                    timeAtIndex = (double)restOfPointsToUdate[0];
-                    sampleAtIndex = (double)restOfPointsToUdate[1];
-                    series2.Points.Add(new OxyPlot.DataPoint(timeAtIndex / divValue, sampleAtIndex));
-                    myModel.Series.Add(series2);
-                }
 
 
                 // Adding new values
@@ -287,6 +282,14 @@ namespace PVLab
 
                 // Add to the plot
                 myModel.Series.Add(series1);
+
+                if (restOfPointsToUdate.Length > 0)
+                {
+                    timeAtIndex = (double)restOfPointsToUdate[0];
+                    sampleAtIndex = (double)restOfPointsToUdate[1];
+                    series2.Points.Add(new OxyPlot.DataPoint(timeAtIndex , sampleAtIndex));
+                    myModel.Series.Add(series2);
+                }
 
                 // Update
                 //myModel.InvalidatePlot(true);
@@ -526,13 +529,13 @@ namespace PVLab
 
             if (cbDirection.InvokeRequired)
             {
-                StaticVariable.Index = (int)cbDirection.Invoke(new Func<int>(() => cbDirection.SelectedIndex));
+                StaticVariable.RaisingFallingIndex = (int)cbDirection.Invoke(new Func<int>(() => cbDirection.SelectedIndex));
             }
             else
             {
-                StaticVariable.Index = cbDirection.SelectedIndex;
+                StaticVariable.RaisingFallingIndex = cbDirection.SelectedIndex;
             }
-            return StaticVariable.Index;
+            return StaticVariable.RaisingFallingIndex;
 
         }
 
@@ -604,6 +607,10 @@ namespace PVLab
         }
         #endregion
 
+        private void cbDirection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            StaticVariable.RaisingFallingIndex = cbDirection.SelectedIndex;
+        }
     }
 }
 

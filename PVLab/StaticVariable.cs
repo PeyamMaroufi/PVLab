@@ -20,6 +20,7 @@ namespace PVLab
         public static double TriggerAt { get; set; }
         public static double Error { get; set; }
         public static int Index { get; set; }
+        public static int RaisingFallingIndex { get; set; }
         public static bool CheckBoxStatus { get; set; }
         public static Imports.Channel SelChannel { get; set; }
         public static Imports.Range SelVolt { get; set; }
