@@ -137,6 +137,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="PVLab.licenseheader" />
     <None Include="PVLab_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

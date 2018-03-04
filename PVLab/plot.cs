@@ -1,4 +1,10 @@
-﻿
+﻿// Copyright (c) 2018 Payam 
+// Made by Payam M. 
+// Purpose: Measuring the voltage of high voltage devices scaled down to almost 30 V
+// Workes for continues streaming and triggers. Includes repeat trigger and single trigger. and capturing.
+// Target framwork is .NET and WINFORM. 
+// 
+
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -287,7 +293,7 @@ namespace PVLab
                 {
                     timeAtIndex = (double)restOfPointsToUdate[0];
                     sampleAtIndex = (double)restOfPointsToUdate[1];
-                    series2.Points.Add(new OxyPlot.DataPoint(timeAtIndex , sampleAtIndex));
+                    series2.Points.Add(new OxyPlot.DataPoint(timeAtIndex, sampleAtIndex));
                     myModel.Series.Add(series2);
                 }
 

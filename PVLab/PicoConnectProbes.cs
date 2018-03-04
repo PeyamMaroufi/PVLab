@@ -1,19 +1,4 @@
-﻿/**************************************************************************
-*
-* Filename:    PicoConnectProbes.cs
-*
-* Description:
-*
-* This file is based on the C header file PicoConnectProbes.h and 
-* defines the enumerations and functions relating to PicoConnect (TM)
-* probes, along with the input ranges for current clamps and a high
-* voltage probe.
-* 
-* Copyright (C) 2017 Pico Technology Ltd. See LICENSE file for terms.
-*
-*************************************************************************/
-
-using System;
+﻿using System;
 
 namespace PicoConnectProbes
 { 

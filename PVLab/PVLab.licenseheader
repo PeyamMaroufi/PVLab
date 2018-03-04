@@ -1,0 +1,40 @@
+﻿extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+// Copyright (c) 2018 Payam 
+// Made by Payam M. 
+// Purpose: Measuring the voltage of high voltage devices scaled down to almost 30 V
+// Workes for continues streaming and triggers. Includes repeat trigger and single trigger. and capturing.
+// Target framwork is .NET and WINFORM. 
+// 
+
+extensions: .aspx .ascx
+<%-- 
+Made by Payam M. 
+Purpose: Measuring the voltage of high voltage devices scaled down to almost 30 V
+Workes for continues streaming and triggers. Includes repeat trigger and single trigger. and capturing.
+Target framwork is .NET and WINFORM. 
+
+Please if you do any changes contact me at payam.maroufi@terco.se so I can have a use of it and publish new updates.
+PicoTech does not give a lot of info and support regarding their development and this leave us with almost unuseable 
+documents. 
+--%>
+extensions: .vb
+' Made by Payam M. 
+' Purpose: Measuring the voltage of high voltage devices scaled down to almost 30 V
+' Workes for continues streaming and triggers. Includes repeat trigger and single trigger. and capturing.
+' Target framwork is .NET and WINFORM. 
+' 
+' Please if you do any changes contact me at payam.maroufi@terco.se so I can have a use of it and publish new updates.
+' PicoTech does not give a lot of info and support regarding their development and this leave us with almost unuseable 
+' documents. 
+' extensions:  .xml .config .xsd
+<!--
+Made by Payam M. 
+Purpose: Measuring the voltage of high voltage devices scaled down to almost 30 V
+Workes for continues streaming and triggers. Includes repeat trigger and single trigger. and capturing.
+Target framwork is .NET and WINFORM. 
+
+Please if you do any changes contact me at payam.maroufi@terco.se so I can have a use of it and publish new updates.
+PicoTech does not give a lot of info and support regarding their development and this leave us with almost unuseable 
+documents. 
+-->
