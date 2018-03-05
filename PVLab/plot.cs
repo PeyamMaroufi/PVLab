@@ -615,7 +615,7 @@ namespace PVLab
 
         private void cbDirection_SelectedIndexChanged(object sender, EventArgs e)
         {
-            StaticVariable.RaisingFallingIndex = cbDirection.SelectedIndex;
+            GetIndexComBo();
         }
     }
 }

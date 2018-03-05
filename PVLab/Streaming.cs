@@ -320,15 +320,16 @@ namespace PVLab
                 // it is impossible to go forward.
                 for (int i = 0; i < Indeces.Count; i++)
                 {
+                    int indexForward = 30;
                     if (!StaticVariable.RunRepeat)
                     {
                         SampleToPlot.Clear();
                         TimeToPlot.Clear();
 
                         // Checks different situation of trigging
-                        bool isThereValueAround = (Indeces[i] > 30 && Indeces[i] < time.Count - 30) ? true : false;
-                        bool isNoValueBefore = ((Indeces[i] < 30 && Indeces[i] < time.Count - 30) && StaticVariable.CheckBoxStatus) ? true : false;
-                        bool isNoValueAfter = ((Indeces[i] > 30 && Indeces[i] > time.Count - 30) && StaticVariable.CheckBoxStatus) ? true : false;
+                        bool isThereValueAround = (Indeces[i] > indexForward && Indeces[i] < time.Count - indexForward) ? true : false;
+                        bool isNoValueBefore = ((Indeces[i] < indexForward && Indeces[i] < time.Count - indexForward) && StaticVariable.CheckBoxStatus) ? true : false;
+                        bool isNoValueAfter = ((Indeces[i] > indexForward && Indeces[i] > time.Count - indexForward) && StaticVariable.CheckBoxStatus) ? true : false;
 
                         if (isThereValueAround)
                         {
@@ -339,13 +340,13 @@ namespace PVLab
                             // and after.
                             ss = "There are more than 5 values after and before the triggered value in this iteration " + Environment.NewLine;
                             StaticVariable.form.InsertText(ss);
-                            for (int d = Indeces[i] - 30; d < Indeces[i] + 30; d++)
+                            for (int d = Indeces[i] - indexForward; d < Indeces[i] + indexForward; d++)
                             {
                                 SampleToPlot.Add(sample[d]);
                             }
 
                             // Set negative side of time and zero time point
-                            for (int d = Indeces[i]; d >= Indeces[i] - 30; d--)
+                            for (int d = Indeces[i]; d >= Indeces[i] - indexForward; d--)
                             {
                                 if (d == Indeces[i])
                                 {
@@ -359,7 +360,7 @@ namespace PVLab
                             }
 
                             // Set positive side of time and zero time point
-                            for (int d = Indeces[i] + 1; d < Indeces[i] + 30; d++)
+                            for (int d = Indeces[i] + 1; d < Indeces[i] + indexForward; d++)
                             {
                                 TimeToPlot.Add(repeatIndex);
                                 repeatIndex++;
@@ -441,45 +442,53 @@ namespace PVLab
                         // repeat trigger in both direction.
 
                         CenterValue = SampleToPlot.FindIndex(item => item == sample1);
+                        if (CenterValue != indexForward)
+                            continue;
+
                         bool ExistValueAround = ((SampleToPlot.Count > 0) && (CenterValue < SampleToPlot.Count)) ? true : false;
 
-
-                        switch (StaticVariable.RaisingFallingIndex)
+                        if (CenterValue != -1)
                         {
-                            // No direction
-                            case -1:
-                                ss = "No item is selected in the combo box " + Environment.NewLine;
-                                StaticVariable.form.InsertText(ss);
 
-                                // Show
-                                StaticVariable.form.PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
-                                break;
+                            switch (StaticVariable.RaisingFallingIndex)
+                            {
+                                // No direction
+                                case -1:
+                                    ss = "No item is selected in the combo box " + Environment.NewLine;
+                                    StaticVariable.form.InsertText(ss);
 
-                            // Rising
-                            case 0:
-                                if (ExistValueAround && (SampleToPlot[CenterValue - 1] < sample1))
-                                {
-
-                                    ss = "Rising mode is selected in the combo box" + Environment.NewLine;
-                                    // Gör rising
+                                    // Show
                                     StaticVariable.form.PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
-                                }
-                                else { continue; }
-                                break;
+                                    break;
 
-                            // Falling
-                            case 1:
+                                // Rising
+                                case 0:
+                                    if ((SampleToPlot[CenterValue - 1] < sample1) && ExistValueAround)
+                                    {
 
-                                if (ExistValueAround && (SampleToPlot[CenterValue + 1] < sample1))
-                                {
-                                    ss = "Falling mode is selected in the combo box " + Environment.NewLine;
-                                    // Gör falling
-                                    StaticVariable.form.PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
-                                }
+                                        ss = "Rising mode is selected in the combo box" + Environment.NewLine;
+                                        ss = "Value for sample1 is " + sample1.ToString() + " and the sample after is " + SampleToPlot[CenterValue - 1].ToString() + Environment.NewLine;
+                                        StaticVariable.form.InsertText(ss);
 
-                                break;
+                                        // Gör rising
+                                        StaticVariable.form.PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
+                                    }
+                                    else { continue; }
+                                    break;
+
+                                // Falling
+                                case 1:
+
+                                    if (ExistValueAround && (SampleToPlot[CenterValue + 1] < sample1))
+                                    {
+                                        ss = "Falling mode is selected in the combo box " + Environment.NewLine;
+                                        // Gör falling
+                                        StaticVariable.form.PlottingMethod(TimeToPlot, SampleToPlot, time1, sample1);
+                                    }
+
+                                    break;
+                            }
                         }
-
 
                     }
 
