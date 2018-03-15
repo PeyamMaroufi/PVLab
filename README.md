@@ -4,4 +4,4 @@ A UI is made for reading , recording and streaming samples. You are able to trig
 
 You want to develop further, fork and make your changes and just let me know. 
 
-'Share' is not really needed
+'shared' folder is not really needed. 
